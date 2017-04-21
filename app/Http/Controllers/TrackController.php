@@ -38,8 +38,12 @@ class TrackController extends Controller
     public function store(Request $request)
     {
         //
-        Track::create(['title' => $request->title]);
-        $request->file->store('test');
+        $path = $request->file->store('tracks');
+        Track::create([
+            'title' => $request->title,
+            'path' => $path,
+        ]);
+
         return ['status' => 'success'];
     }
 
