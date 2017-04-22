@@ -56,6 +56,7 @@ class TrackController extends Controller
     public function show(Track $track)
     {
         //
+        
     }
 
     /**

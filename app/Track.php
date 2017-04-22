@@ -8,7 +8,7 @@ class Track extends Model
 {
     //
     protected $fillable = [
-        'title'
+        'title', 'path',
     ];
 
     public function artists()
