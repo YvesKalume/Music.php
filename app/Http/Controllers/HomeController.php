@@ -23,10 +23,6 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->admin)
-        {
-            return view('admin/home');
-        }
         return view('home');
     }
 }

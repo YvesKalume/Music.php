@@ -16,6 +16,8 @@ class TrackController extends Controller
     public function index()
     {
         //
+        $tracks = Track::all();
+        return view('track/index', ['tracks' => $tracks]);
     }
 
     /**
@@ -25,7 +27,6 @@ class TrackController extends Controller
      */
     public function create()
     {
-        //
         return view('track/create');
     }
 
@@ -37,7 +38,6 @@ class TrackController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $path = $request->file->store('tracks');
         Track::create([
             'title' => $request->title,
@@ -56,7 +56,12 @@ class TrackController extends Controller
     public function show(Track $track)
     {
         //
-        
+        $contents = Storage::get($track->path);
+        return response($contents)->withHeaders([
+            'Content-Disposition' => 'filename=audio.mp3',
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-Type' => 'audio/mpeg'
+        ]);
     }
 
     /**

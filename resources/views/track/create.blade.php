@@ -1,7 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
 <script src="{{ asset('js/jsmediatags.min.js') }}"></script>
+
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2" id="column">
@@ -62,7 +60,6 @@
                                                     event.preventDefault();
                                                     var formData = new FormData($("#${i}form")[0]);
                                                     formData.append("file", files[${i}], "file.mp3");
-                                                    alert(formData.get("file"));
                                                     $.post({
                                                         url: "{{ route('tracks.store') }}",
                                                         data: formData,
@@ -87,4 +84,3 @@
         </div>
     </div>
 </div>
-@endsection

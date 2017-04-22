@@ -19,6 +19,10 @@ Route::get('/', 'HomeController@index');
 
 Auth::routes();
 
+Route::get('/admin', 'HomeController@admin');
+Route::get('/client', function() {
+    return view('client');
+});
 Route::get('/home', 'HomeController@index');
 
 Route::resource('tracks', 'TrackController');
