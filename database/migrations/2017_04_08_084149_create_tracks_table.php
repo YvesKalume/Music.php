@@ -28,6 +28,8 @@ class CreateTracksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tracks');
+        Schema::disableForeignKeyConstraints();
+        Schema::drop('tracks');
+        Schema::enableForeignKeyConstraints();
     }
 }

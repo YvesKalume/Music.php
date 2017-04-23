@@ -20,9 +20,8 @@ Route::get('/', 'HomeController@index');
 Auth::routes();
 
 Route::get('/admin', 'HomeController@admin');
-Route::get('/client', function() {
-    return view('client');
-});
+Route::get('/client/{url?}/{url2?}', 'ClientController')->name('client');
 Route::get('/home', 'HomeController@index');
 
+Route::resource('artists', 'ArtistController');
 Route::resource('tracks', 'TrackController');

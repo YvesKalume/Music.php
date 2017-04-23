@@ -13,7 +13,6 @@
     <th>Title</th>
     <th>Path</th>
     <th>Play</th>
-    <th>Delete</th>
 @endsection
 
 @section('rows')
@@ -23,7 +22,6 @@
             <td>{{$track->title}}</td>
             <td>{{$track->path}}</td>
             <td><button class="btn btn-primary" onclick="play('/tracks/{{ $track->id }}')">Play</button></td>
-            <td><button class="btn btn-danger" onclick="callDelete('/tracks/{{ $track->id }}')">Delete</button></td>
         </tr>
     @endforeach
 @endsection

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Album;
+use App\Artist;
 use App\Track;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TrackController extends Controller
@@ -27,7 +30,9 @@ class TrackController extends Controller
      */
     public function create()
     {
-        return view('track/create');
+        $albums = Album::all();
+        $artists = Artist::all();
+        return view('track/create', ['albums' => $albums, 'artists' => $artists]);
     }
 
     /**
@@ -39,11 +44,12 @@ class TrackController extends Controller
     public function store(Request $request)
     {
         $path = $request->file->store('tracks');
-        Track::create([
+        $track = Track::create([
             'title' => $request->title,
             'path' => $path,
         ]);
-
+        $artists = Artist::find($request->artists);
+        $track->artists()->saveMany($artists);
         return ['status' => 'success'];
     }
 
@@ -55,7 +61,6 @@ class TrackController extends Controller
      */
     public function show(Track $track)
     {
-        //
         $contents = Storage::get($track->path);
         return response($contents)->withHeaders([
             'Content-Disposition' => 'filename=audio.mp3',
@@ -95,6 +100,9 @@ class TrackController extends Controller
      */
     public function destroy(Track $track)
     {
-        //
+        Storage::delete($track->path);
+        $track->artists()->detach();
+        $track->delete();
+        return ['status' => 'success'];
     }
 }

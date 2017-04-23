@@ -11,6 +11,11 @@ class Track extends Model
         'title', 'path',
     ];
 
+    public function albums()
+    {
+        return $this->belongsToMany('App\Album');
+    }
+
     public function artists()
     {
         return $this->belongsToMany('App\Artist');

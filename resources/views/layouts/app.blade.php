@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ config('app.locale') }}">
+<html lang="{{ config('app.locale') }}" style="">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,7 +21,7 @@
     </script>
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
-<body>
+<body style="">
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">

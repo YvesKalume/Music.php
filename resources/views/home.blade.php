@@ -1,28 +1,26 @@
-@extends('layouts.app')
+@extends('ajax')
 
-@section('content')
-<div class="container">
+<div class="container" id="content">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">User Dashboard</div>
                 <div class="panel-body">
-                    You are logged in!
+
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">Albums</div>
                 <div class="panel-body">
-                    You are logged in!
+
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">Tracks</div>
                 <div class="panel-body">
-                    You are logged in!
+                    <a class="btn btn-primary" href="{{ route('tracks.index') }}">More Tracks</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection

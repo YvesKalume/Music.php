@@ -20,31 +20,8 @@
     }
 </style>
 
-<div class="container" id="content">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">User Dashboard</div>
-                <div class="panel-body">
-                    
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">Albums</div>
-                <div class="panel-body">
-
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">Tracks</div>
-                <div class="panel-body">
-                    <a class="btn btn-primary" href="{{ route('tracks.index') }}">More Tracks</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<footer class="footer" style="position: absolute; bottom: 0; height: 8vh; background-color: #008080; width: 100%;">
+<div class="container" id="content"></div>
+<footer class="footer navbar-fixed-bottom" style="position: absolute; bottom: 0; height: 8vh; background-color: #008080; width: 100%;">
     <audio id="player" style="visibility: hidden;">
         <source id="source" type="audio/mp3"></source>
     </audio>
@@ -56,6 +33,28 @@
     </div>
 </footer>
 <script>
+    $(document).ready(() => {
+        load(document.location.origin + '/{{ $url }}');
+    });
+    var load = url => {
+        $.get({
+            url: url,
+            success: data => {
+                $('#content').html(data);
+            }
+        });
+        if (url !== window.location) {
+            window.history.pushState({path:url},'',url);
+        }
+        $(window).bind('popstate', () => {
+            $.get({
+                url:location.pathname,
+                success: data => {
+                    $('#content').html(data);
+                }
+            });
+        });
+    };
     var play = url => {
         $('#source').attr('src', url);
         $('#player')[0].load();
@@ -70,23 +69,7 @@
     $('#content').on('click', "a", event => {
         event.preventDefault();
         let pageurl = event.target.href;
-        $.get({
-            url: pageurl,
-            success: data => {
-                $('#content').html(data);
-            }
-        });
-        if (pageurl !== window.location) {
-            window.history.pushState({path:pageurl},'',pageurl);
-        }
-        $(window).bind('popstate', () => {
-            $.get({
-                url:location.pathname,
-                success: data => {
-                    $('#content').html(data);
-                }
-            });
-        });
+        load(pageurl);
     });
 </script>
 @endsection
