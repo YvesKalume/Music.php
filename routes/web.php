@@ -25,3 +25,4 @@ Route::get('/home', 'HomeController@index');
 
 Route::resource('artists', 'ArtistController');
 Route::resource('tracks', 'TrackController');
+Route::get('/tracks/audio/{track}', 'TrackController@audio');

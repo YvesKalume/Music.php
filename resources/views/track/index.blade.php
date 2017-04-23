@@ -1,5 +1,7 @@
 @extends('layouts.index')
 
+<meta name="queue" content="tracks">
+
 @section('actions')
     <a class="btn btn-primary" href="{{ route('tracks.create') }}">Upload Tracks</a>
 @endsection
@@ -11,7 +13,7 @@
 @section('columns')
     <th>ID</th>
     <th>Title</th>
-    <th>Path</th>
+    <th>Artists</th>
     <th>Play</th>
     <th>Delete</th>
 @endsection
@@ -21,8 +23,12 @@
         <tr>
             <td>{{$track->id}}</td>
             <td>{{$track->title}}</td>
-            <td>{{$track->path}}</td>
-            <td><button class="btn btn-primary" onclick="play('/tracks/{{ $track->id }}')">Play</button></td>
+            <td>
+                @foreach($track->artists as $artist)
+                    {{$artist->name}}
+                @endforeach
+            </td>
+            <td><button class="btn btn-primary" onclick="play('{{ $track->id }}')">Play</button></td>
             <td><button class="btn btn-danger" onclick="callDelete('/tracks/{{ $track->id }}')">Delete</button></td>
         </tr>
     @endforeach

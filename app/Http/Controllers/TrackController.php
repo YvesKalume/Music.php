@@ -61,12 +61,11 @@ class TrackController extends Controller
      */
     public function show(Track $track)
     {
-        $contents = Storage::get($track->path);
-        return response($contents)->withHeaders([
-            'Content-Disposition' => 'filename=audio.mp3',
-            'Content-Transfer-Encoding' => 'binary',
-            'Content-Type' => 'audio/mpeg'
-        ]);
+        return [
+            'id' => $track->id,
+            'title' => $track->title,
+            'artists' => $track->artists
+        ];
     }
 
     /**
@@ -104,5 +103,24 @@ class TrackController extends Controller
         $track->artists()->detach();
         $track->delete();
         return ['status' => 'success'];
+    }
+
+    // Additional functions.
+
+    /**
+     * Gets the audio file for the requested track.
+     *
+     * @param  \App\Track $track
+     * @return \Illuminate\Http\Response
+     */
+    public function audio(Track $track)
+    {
+        $size = Storage::size($track->path);
+        return response(Storage::get($track->path))->withHeaders([
+            'Content-Disposition' => 'filename=audio.mp3',
+            'Content-Length' => $size,
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-Type' => 'audio/mpeg'
+        ]);
     }
 }
