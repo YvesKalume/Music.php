@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 class TrackController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -122,5 +128,11 @@ class TrackController extends Controller
             'Content-Transfer-Encoding' => 'binary',
             'Content-Type' => 'audio/mpeg'
         ]);
+    }
+
+    public function queue()
+    {
+        $tracks = Track::all();
+        return ['tracks' => $tracks];
     }
 }

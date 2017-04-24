@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class ArtistController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -41,7 +46,7 @@ class ArtistController extends Controller
         }
         else
         {
-            
+
         }
         return ['status' => 'success', 'id' => $artist->id];
     }

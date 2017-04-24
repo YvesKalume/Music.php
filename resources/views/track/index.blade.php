@@ -4,6 +4,7 @@
 
 @section('actions')
     <a class="btn btn-primary" href="{{ route('tracks.create') }}">Upload Tracks</a>
+    <a class="btn btn-success queue" href="{{ route('tracks.queue') }}">Queue</a>
 @endsection
 
 @section('heading')
