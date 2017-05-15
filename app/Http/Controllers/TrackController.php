@@ -55,6 +55,8 @@ class TrackController extends Controller
             'path' => $path,
         ]);
         $artists = Artist::find($request->artists);
+        $albums = Album::find($request->albums);
+        $track->albums()->saveMany($albums);
         $track->artists()->saveMany($artists);
         return ['status' => 'success'];
     }
@@ -82,7 +84,9 @@ class TrackController extends Controller
      */
     public function edit(Track $track)
     {
-        //
+        $albums = Album::all();
+        $artists = Artist::all();
+        return view('track/edit', ['albums' => $albums, 'artists' => $artists, 'track' => $track]);
     }
 
     /**

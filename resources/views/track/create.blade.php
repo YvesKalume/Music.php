@@ -6,7 +6,9 @@
         <div class="col-md-8 col-md-offset-2" id="column">
             <div class="panel panel-default" id="upload">
                 <div class="panel-heading">Add Tracks</div>
-                <div class="panel-body"><input id="trackfiles" multiple type="file"></input></div>
+                <div class="panel-body">
+                    <input id="trackfiles" multiple type="file"></input>
+                </div>
             </div>
             <script>
                 var blob = window.URL || window.webkitURL;
@@ -71,7 +73,7 @@
                                                     <label for="albums" class="col-md-4 control-label">Albums</label>
 
                                                     <div class="col-md-6">
-                                                        <select class="albums" id="albums" class="form-control" name="albums[]" style="width: 100%" multiple>
+                                                        <select class="albums" id="albums" class="form-control" name="albums[]" style="width: 100%" multiple required>
                                                             @foreach ($albums as $album)
                                                                 <option value="{{ $album->id }}">{{ $album->name }}</option>
                                                             @endforeach
@@ -125,6 +127,31 @@
                         return $(event.target).prop("selected", false);
                     }
                     $(event.target).prop("selected", true);
+                });
+                $('#container').on('click', "#addalbum", event => {
+                    $(event.target).prop("selected", false);
+                    let album = prompt("Please enter the name of the album you would like to add.");
+                    if (!album) {
+                        return alert("Please enter a name for the album.");
+                    }
+                    let formData = new FormData();
+                    formData.append("name", album);
+                    formData.append("_token", "{{ csrf_token() }}")
+                    $.post({
+                        url: "{{ route('albums.store') }}",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: (data) => {
+                            if(data.status === "success") {
+                                alert("Album added successfully!");
+                                $('.albums').prepend($('<option>', {
+                                    value: data.id,
+                                    text: album
+                                }));
+                            }
+                        }
+                    });
                 });
                 $('#container').on('click', "#addartist", event => {
                     $(event.target).prop("selected", false);
