@@ -19,7 +19,8 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        //
+        $albums = Album::all();
+        return view('album/index', ['albums' => $albums]);
     }
 
     /**
@@ -40,7 +41,15 @@ class AlbumController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->ajax())
+        {
+            $album = Album::create(['name' => $request->name]);
+        }
+        else
+        {
+
+        }
+        return ['status' => 'success', 'id' => $album->id];
     }
 
     /**

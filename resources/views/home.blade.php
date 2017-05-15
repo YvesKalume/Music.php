@@ -12,7 +12,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Albums</div>
                 <div class="panel-body">
-
+                    <a class="btn btn-primary" href="{{ route('albums.index') }}">More Albums</a>
                 </div>
             </div>
             <div class="panel panel-default">
