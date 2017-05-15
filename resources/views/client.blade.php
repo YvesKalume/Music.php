@@ -66,7 +66,7 @@
 </style>
 
 <div class="container" id="content"></div>
-<footer class="footer navbar-fixed-bottom" style="position: absolute; bottom: 0; height: 8vh; background-color: #008080; width: 100%;">
+<footer class="navbar navbar-default navbar-fixed-bottom" style="height: 8vh; background-color: #008080; width: 100%;">
     <audio id="player" style="visibility: hidden;">
         <source id="source" type="audio/mp3"></source>
     </audio>
@@ -75,7 +75,9 @@
             <div class="col-md-2" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
                 <button class="toggle" id="play" onclick="toggle()"></button>
             </div>
-            <div class="col-md-2" style="height: 100%; display: flex; flex-direction: column; justify-content: center;"><p id="trackdata">No track playing</p></div>
+            <div class="col-md-2" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                <p id="trackdata">No track playing</p>
+            </div>
             <div class="col-md-8 vertical-center">
                 <div id="progressbar">
                     <div></div>
