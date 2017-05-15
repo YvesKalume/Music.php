@@ -99,6 +99,9 @@
     var load = url => {
         $.get({
             url: url,
+            error: err => {
+                $('#content').html(err.responseText);
+            },
             success: data => {
                 $('#content').html(data);
             }
