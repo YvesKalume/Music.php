@@ -15,8 +15,8 @@
     <th>ID</th>
     <th>Title</th>
     <th>Artists</th>
-    <th>Play</th>
-    <th>Delete</th>
+    <th>View</th>
+    <th>Edit</th>
 @endsection
 
 @section('rows')
@@ -29,8 +29,8 @@
                     {{$artist->name}}
                 @endforeach
             </td>
-            <td><button class="btn btn-primary" onclick="play('{{ $track->id }}')">Play</button></td>
-            <td><button class="btn btn-danger" onclick="callDelete('/tracks/{{ $track->id }}')">Delete</button></td>
+            <td><button class="btn btn-success" onclick="play('{{ $track->id }}')">Play</button></td>
+            <td><a class="btn btn-primary" href="/tracks/{{$track->id}}/edit">Edit</a></td>
         </tr>
     @endforeach
 @endsection
