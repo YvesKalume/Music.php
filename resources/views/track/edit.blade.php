@@ -4,10 +4,11 @@
         <div class="col-md-8 col-md-offset-2" id="column">
             <div class="panel panel-default">
                 <div class="panel-heading">{{$track->title}}</div>
-                <div class="panel-body" id="${i}div">
+                <div class="panel-body" id="formpanel">
 
-                    <form class="form-horizontal" id="${i}form" role="form" method="POST">
+                    <form class="form-horizontal" id="updateform" role="form" method="POST">
                         {{ csrf_field() }}
+                        {{ method_field('PUT') }}
 
                         <div class="form-group">
                             <label for="Track" class="col-md-4 control-label">Track</label>
@@ -88,17 +89,20 @@
                         </div>
                     </form>
                     <script>
-                        $('#${i}form').submit(function(event) {
+                        $('#formpanel').submit(function(event) {
                             event.preventDefault();
-                            var formData = new FormData($("#${i}form")[0]);
+                            var formData = new FormData($("#updateform")[0]);
                             $.post({
                                 url: "{{ route('tracks.update', $track->id) }}",
                                 data: formData,
+                                error: err => {
+                                    $('#content').html(err.responseText);
+                                },
                                 contentType: false,
                                 processData: false,
                                 success: (data) => {
                                     if(data.status === "success") {
-                                        $('#${i}div').html("Successfully updated track data!");
+                                        $('#formpanel').html("Successfully updated track data!");
                                     }
                                 }
                             });

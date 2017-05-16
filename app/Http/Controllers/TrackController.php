@@ -98,7 +98,12 @@ class TrackController extends Controller
      */
     public function update(Request $request, Track $track)
     {
-        //
+        $track->title = $request->title;
+        $albums = Album::find($request->albums);
+        $track->albums()->saveMany($albums);
+        $artists = Artist::find($request->artists);
+        $track->artists()->saveMany($artists);
+        $track->save();
     }
 
     /**
