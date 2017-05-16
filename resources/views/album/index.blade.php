@@ -22,9 +22,9 @@
     @foreach ($albums as $album)
         <tr>
             <td>{{$album->id}}</td>
-            <td>{{$album->title}}</td>
-            <td>{{$album->artist}}</td>
-            <td><button class="btn btn-success" onclick="/albums/{{ $album->id }}">View</button></td>
+            <td>{{$album->name}}</td>
+            <td>{{$album->artist->name}}</td>
+            <td><a class="btn btn-success" href="/albums/{{ $album->id }}">View</a></td>
             <td><button class="btn btn-primary" onclick="/albums/{{ $album->id }}/edit">Edit</button></td>
         </tr>
     @endforeach
