@@ -140,6 +140,9 @@
                     $.post({
                         url: "{{ route('albums.store') }}",
                         data: formData,
+                        error: err => {
+                            $('#container').html(err.responseText);
+                        },
                         contentType: false,
                         processData: false,
                         success: (data) => {
