@@ -96,13 +96,15 @@
                                 url: "{{ route('tracks.update', $track->id) }}",
                                 data: formData,
                                 error: err => {
-                                    $('#content').html(err.responseText);
+                                    $('#container').html(err.responseText);
                                 },
                                 contentType: false,
                                 processData: false,
                                 success: (data) => {
                                     if(data.status === "success") {
                                         $('#formpanel').html("Successfully updated track data!");
+                                    } else {
+                                        alert('wtf');
                                     }
                                 }
                             });

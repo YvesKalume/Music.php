@@ -100,10 +100,13 @@ class TrackController extends Controller
     {
         $track->title = $request->title;
         $albums = Album::find($request->albums);
+        $track->albums()->detach();
         $track->albums()->saveMany($albums);
         $artists = Artist::find($request->artists);
+        $track->artists()->detach();
         $track->artists()->saveMany($artists);
         $track->save();
+        return ['status' => 'success'];
     }
 
     /**
