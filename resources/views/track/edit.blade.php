@@ -104,7 +104,7 @@
                                     if(data.status === "success") {
                                         $('#formpanel').html("Successfully updated track data!");
                                     } else {
-                                        alert('wtf');
+                                        $('#formpanel').html("Invalid response");
                                     }
                                 }
                             });
