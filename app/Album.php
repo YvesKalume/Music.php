@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Album extends Model
 {
     protected $fillable = [
-        'name'
+        'artist_id', 'name', 'path'
     ];
 
     public function artist()

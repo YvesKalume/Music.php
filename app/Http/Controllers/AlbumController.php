@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Album;
+use App\Artist;
+use App\Track;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AlbumController extends Controller
 {
@@ -30,7 +34,8 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        //
+        $artists = Artist::all();
+        return view('album/create', ['artists' => $artists]);
     }
 
     /**
@@ -41,13 +46,19 @@ class AlbumController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->ajax())
+        if ($request->has('quicksave'))
         {
             $album = Album::create(['name' => $request->name]);
         }
         else
         {
-
+            $path = $request->file->store('albums');
+            $album = Album::create([
+                'name' => $request->name,
+                'path' => $path,
+                'artist_id' => $request->artist
+            ]);
+            return ['status' => 'success'];
         }
         return ['status' => 'success', 'id' => $album->id];
     }
@@ -60,7 +71,7 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        return view('album/show', ['album' => $album]);
+        return view('album/show', ['album' => $album, 'image' => response(Storage::get($album->path))]);
     }
 
     /**
@@ -71,7 +82,9 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        //
+        $tracks = Track::all();
+        $artists = Artist::all();
+        return view('track/edit', ['album' => $album, 'artists' => $artists, 'tracks' => $tracks]);
     }
 
     /**
