@@ -20,9 +20,10 @@ Route::get('/', 'HomeController@index');
 Auth::routes();
 
 Route::get('/admin', 'HomeController@admin');
+Route::get('/albums/image/{album}', 'AlbumController@image');
 Route::get('/client/{url?}/{url2?}/{url3?}', 'ClientController')->name('client');
 Route::get('/home', 'HomeController@index');
-Route::get('/tracks/audio/{track}', 'TrackController@audio');
+Route::get('/tracks/{track}/audio', 'TrackController@audio');
 Route::get('/tracks/queue', 'TrackController@queue')->name('tracks.queue');
 
 Route::resource('albums', 'AlbumController');
