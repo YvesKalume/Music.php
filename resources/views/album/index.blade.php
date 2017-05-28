@@ -24,8 +24,8 @@
             <td>{{$album->id}}</td>
             <td>{{$album->name}}</td>
             <td>{{$album->artist->name}}</td>
-            <td><a class="btn btn-success" href="/albums/{{ $album->id }}">View</a></td>
-            <td><button class="btn btn-primary" onclick="/albums/{{ $album->id }}/edit">Edit</button></td>
+            <td><a class="btn btn-success" href="{{ route('albums.show', $album->id) }}">View</a></td>
+            <td><a class="btn btn-primary" href="{{ route('albums.edit', $album->id) }}">Edit</a></td>
         </tr>
     @endforeach
 @endsection
