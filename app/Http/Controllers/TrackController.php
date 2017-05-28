@@ -133,13 +133,7 @@ class TrackController extends Controller
      */
     public function audio(Track $track)
     {
-        $size = Storage::size($track->path);
-        return response(Storage::get($track->path))->withHeaders([
-            'Content-Disposition' => 'filename=audio.mp3',
-            'Content-Length' => $size,
-            'Content-Transfer-Encoding' => 'binary',
-            'Content-Type' => 'audio/mpeg'
-        ]);
+        return response()->file(storage_path().DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.$track->path);
     }
 
     public function queue()
