@@ -71,7 +71,7 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        return view('album/show', ['album' => $album, 'image' => response(Storage::get($album->path))]);
+        return view('album/show', ['album' => $album]);
     }
 
     /**
@@ -84,7 +84,7 @@ class AlbumController extends Controller
     {
         $tracks = Track::all();
         $artists = Artist::all();
-        return view('track/edit', ['album' => $album, 'artists' => $artists, 'tracks' => $tracks]);
+        return view('album/edit', ['album' => $album, 'artists' => $artists, 'tracks' => $tracks]);
     }
 
     /**
@@ -96,7 +96,11 @@ class AlbumController extends Controller
      */
     public function update(Request $request, Album $album)
     {
-        //
+        $album->name = $request->name;
+        $album->artist_id = $request->artist;
+        $album->save();
+
+        return ['status' => 'success'];
     }
 
     /**
@@ -108,5 +112,28 @@ class AlbumController extends Controller
     public function destroy(Album $album)
     {
         //
+    }
+
+    // Additional functions.
+
+    /**
+     * Gets the image file for the requested album.
+     *
+     * @param  \App\Album $album
+     * @return \Illuminate\Http\Response
+     */
+    public function image(Album $album)
+    {
+        $size = Storage::size($album->path);
+        return response(Storage::get($album->path))->withHeaders([
+            'Content-Disposition' => 'filename=image.jpeg',
+            'Content-Length' => $size,
+            'Content-Type' => 'image/jpeg'
+        ]);
+    }
+
+    public function getTracks(Album $album)
+    {
+
     }
 }
