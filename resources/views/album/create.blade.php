@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-success">
-                                    Update
+                                    Create
                                 </button>
                             </div>
                         </div>
@@ -90,8 +90,9 @@
                     }
                     $(event.target).prop("selected", true);
                 });
-                $('#container').on('click', "#addartist", event => {
-                    $(event.target).prop("selected", false);
+                $('#container').on('change', "#artists", event => {
+                    if ($(event.target).val() !== "addartist") return;
+                    $('#artist1').prop("selected", true);
                     let artist = prompt("Please enter the name of the artist you would like to add.");
                     if (!artist) {
                         return alert("Please enter a name for the artist.");
