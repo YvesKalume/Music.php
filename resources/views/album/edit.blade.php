@@ -3,53 +3,42 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2" id="column">
             <div class="panel panel-default">
-                <div class="panel-heading">{{$album->name}}</div>
+                <div class="panel-heading">{{ $album->name }}</div>
                 <div class="panel-body" id="formpanel">
                     <form class="form-horizontal" id="updateform" role="form" method="POST">
                         {{ csrf_field() }}
                         {{ method_field('PUT') }}
 
                         <div class="form-group">
-                            <label for="Track" class="col-md-4 control-label">Image</label>
+
+                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                            <label for="name" class="col-md-4 control-label">Name</label>
 
                             <div class="col-md-6">
-                                <audio controls src="/tracks/audio/{{ $track->id }}"></audio>
-                            </div>
-                        </div>
+                                <input id="name" type="text" class="form-control" name="name" value="{{$album->name}}" required autofocus>
 
-                        <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
-                            <label for="title" class="col-md-4 control-label">Name</label>
-
-                            <div class="col-md-6">
-                                <input id="title" type="text" class="form-control" name="title" value="{{ $track->title }}" required autofocus>
-
-                                @if ($errors->has('title'))
+                                @if ($errors->has('name'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('title') }}</strong>
+                                        <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('artists') ? ' has-error' : '' }}">
-                            <label for="artists" class="col-md-4 control-label">Artist</label>
+                        <div class="form-group{{ $errors->has('artist') ? ' has-error' : '' }}">
+                            <label for="artist" class="col-md-4 control-label">Artist</label>
 
                             <div class="col-md-6">
-                                <select class="artists" id="artists" class="form-control" name="artists[]" style="width: 100%" required>
+                                <select class="artists" id="artists" class="form-control" name="artist" style="width: 100%" required>
                                     @foreach ($artists as $artist)
-                                        <option id="artist{{$artist->id}}" value="{{ $artist->id }}">{{ $artist->name }}</option>
-                                    @endforeach
-                                    @foreach($track->artists as $artist)
-                                        <script>
-                                            $('#artist{{$artist->id}}').prop('selected', true);
-                                        </script>
+                                        <option id="artist{{$artist->id}}" value="{{ $artist->id }}" {{ $album->artist == $artist ? 'selected' : '' }}>{{ $artist->name }}</option>
                                     @endforeach
                                     <option id="addartist" value="addartist">+ Add Artist</option>
                                 </select>
 
-                                @if ($errors->has('title'))
+                                @if ($errors->has('artist'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('title') }}</strong>
+                                        <strong>{{ $errors->first('artist') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -77,7 +66,7 @@
                                 processData: false,
                                 success: (data) => {
                                     if(data.status === "success") {
-                                        $('#formpanel').html("Successfully updated track data!");
+                                        $('#formpanel').html("Successfully updated album!");
                                     } else {
                                         $('#formpanel').html("Invalid response");
                                     }
