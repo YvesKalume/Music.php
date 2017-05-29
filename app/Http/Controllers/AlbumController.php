@@ -23,8 +23,7 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        $albums = Album::all();
-        return view('album/index', ['albums' => $albums]);
+        return Album::all();
     }
 
     /**
@@ -71,7 +70,7 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        return view('album/show', ['album' => $album]);
+        return $album;
     }
 
     /**
