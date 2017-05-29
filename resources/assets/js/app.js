@@ -15,13 +15,14 @@ require('./bootstrap');
 
 Vue.use(Vuex);
 
-// Vue.mixin({
-//     methods: {
-//         setView: function(view, arg) {
-//             this.$emit('view', view, arg);
-//         }
-//     }
-// });
+Vue.mixin({
+    methods: {
+        setView: function(view) {
+            this.$store.commit('setView', view);
+            this.$emit('view');
+        }
+    }
+});
 
 Vue.component('album-index', require('./components/album/Index.vue'));
 Vue.component('album-show', require('./components/album/Show.vue'));
