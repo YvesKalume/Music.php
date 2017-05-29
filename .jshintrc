@@ -4,5 +4,6 @@
 
     "browser": true,
     "devel": true,
-    "jquery": true
+    "jquery": true,
+    "node": true
 }
