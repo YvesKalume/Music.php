@@ -26,7 +26,7 @@
                             <tr v-for="album in albums">
                                 <td>{{ album.id }}</td>
                                 <td>{{ album.name }}</td>
-                                <td>{{ album.artist_id }}</td>
+                                <td>{{ album.artist.name }}</td>
                                 <td><button class="btn btn-success" v-on:click="setView('album-show', album.id)">View</button></td>
                                 <td><button class="btn btn-primary" v-on:click="">Edit</button></td>
                             </tr>
@@ -46,8 +46,10 @@
             }
         },
         methods: {
-            setAlbum: function(id) {
+            setView: function(view, id) {
                 this.$store.commit('setAlbum', id);
+                this.$store.commit('setView', view);
+                this.$emit('view');
             }
         },
         mounted() {
