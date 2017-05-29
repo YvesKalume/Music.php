@@ -23,7 +23,9 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        return Album::all();
+        $albums = Album::all();
+        $albums->load('artist');
+        return $albums;
     }
 
     /**
@@ -70,6 +72,9 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
+        $album->load('artist');
+        $album->load('tracks');
+        $album->tracks->load('artists');
         return $album;
     }
 
