@@ -20,7 +20,7 @@ Route::get('/', 'HomeController@index');
 Auth::routes();
 
 Route::get('/admin', 'HomeController@admin');
-Route::get('/albums/image/{album}', 'AlbumController@image');
+Route::get('/albums/{album}/image', 'AlbumController@image');
 Route::get('/client/{url?}/{url2?}/{url3?}', 'ClientController')->name('client');
 Route::get('/home', 'HomeController@index');
 Route::get('/settings', function() {
