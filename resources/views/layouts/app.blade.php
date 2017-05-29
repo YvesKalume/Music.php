@@ -19,7 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    @yield('styles')
 </head>
 <body style="">
     <div id="app">
@@ -60,11 +60,12 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('settings') }}"><span class="glyphicon glyphicon-home"></span> User Settings</a></li>
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                            Logout
+                                            <span class="glyphicon glyphicon-log-out"></span> Logout
                                         </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -81,5 +82,7 @@
 
         @yield('content')
     </div>
+    <script src="{{ asset('js/app.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>
