@@ -14,6 +14,6 @@ class ClientController extends Controller
     public function __invoke($url = "home", $url2 = '')
     {
         $url = $url . '/' . $url2;
-        return view('client', ['url' => $url]);
+        return view('client');
     }
 }
