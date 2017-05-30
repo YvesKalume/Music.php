@@ -714,7 +714,7 @@ function applyToTag (styleElement, obj) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(28);
+var normalizeHeaderName = __webpack_require__(29);
 
 var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 var DEFAULT_CONTENT_TYPE = {
@@ -815,12 +815,12 @@ module.exports = defaults;
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(20);
-var buildURL = __webpack_require__(23);
-var parseHeaders = __webpack_require__(29);
-var isURLSameOrigin = __webpack_require__(27);
+var settle = __webpack_require__(21);
+var buildURL = __webpack_require__(24);
+var parseHeaders = __webpack_require__(30);
+var isURLSameOrigin = __webpack_require__(28);
 var createError = __webpack_require__(8);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(22);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(23);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -916,7 +916,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(25);
+      var cookies = __webpack_require__(26);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -1036,7 +1036,7 @@ module.exports = function isCancel(value) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(19);
+var enhanceError = __webpack_require__(20);
 
 /**
  * Create an Error with the specified message, config, error code, and response.
@@ -1073,6 +1073,72 @@ module.exports = function bind(fn, thisArg) {
 
 /***/ }),
 /* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _this = this;
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    add: function add(ids) {
+        if (ids.lastIndexOf(',') === ids.length - 1) ids = ids.substring(0, ids.length - 1);
+        var array = ids.split(',');
+        array.forEach(function (id) {
+            _this.queue.push(id);
+        });
+        if ($('#player')[0].paused) {
+            _this.playFromQueue();
+        }
+    },
+    parseTime: function parseTime(time, recur) {
+        time = Math.floor(time);
+        var timeString = "";
+        timeString = time % 60 < 10 ? "0" + time % 60 + timeString : time % 60 + timeString;
+        if (time / 60 < 1 && !recur) return "0:" + timeString;
+        if (time / 60 < 1) return timeString;
+        return this.parseTime(time / 60, true) + ":" + timeString;
+    },
+    play: function play(id) {
+        $.get({
+            url: document.location.origin + "/tracks/" + id,
+            success: function success(data) {
+                $('#source').attr('src', document.location.origin + "/tracks/" + id + "/audio");
+                var artists = "";
+                $.each(data.artists, function (index) {
+                    artists += data.artists[index].name + ' ';
+                });
+                $('#tracktitle').html(data.title);
+                $('#trackartist').html(artists);
+                $("#icon").attr("class", "glyphicon glyphicon-pause");
+                $('#audio')[0].load();
+                $('#audio')[0].play();
+            }
+        });
+    },
+    playFromQueue: function playFromQueue() {
+        if (!this.queue[0]) {
+            $("#icon").attr("class", "glyphicon glyphicon-play");
+            $('#tracktitle').html("No track playing");
+            $('#trackartist').html("-");
+            $('#duration').html("-:--/-:--");
+            $('#progressbar > div').width('0%');
+            return;
+        }
+        this.play(this.queue[0]);
+        this.queue.splice(0, 1);
+    },
+    queue: [],
+    toggle: function toggle() {
+        if ($('#audio')[0].paused) {
+            $("#icon").attr("class", "glyphicon glyphicon-pause");
+            return $('#audio')[0].play();
+        }
+        $("#icon").attr("class", "glyphicon glyphicon-play");
+        $('#audio')[0].pause();
+    }
+});
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1099,7 +1165,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -1109,7 +1175,7 @@ module.exports = g;
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(38);
+__webpack_require__(39);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -1118,15 +1184,6 @@ __webpack_require__(38);
  */
 
 Vue.use(Vuex);
-
-Vue.mixin({
-    methods: {
-        setView: function setView(view) {
-            this.$store.commit('setView', view);
-            this.$emit('view');
-        }
-    }
-});
 
 Vue.component('album-index', __webpack_require__(50));
 Vue.component('album-show', __webpack_require__(51));
@@ -1144,6 +1201,7 @@ Vue.component('passport-personal-access-tokens', __webpack_require__(54));
  */
 var store = new Vuex.Store({
     state: {
+        admin: false,
         album: null,
         view: "home"
     },
@@ -1162,37 +1220,50 @@ var store = new Vuex.Store({
     }
 });
 
+Vue.mixin({
+    methods: {
+        checkAdmin: function checkAdmin() {
+            return this.$store.state.admin;
+        },
+        setView: function setView(view) {
+            this.$store.commit('setView', view);
+            this.$emit('view');
+        }
+    }
+});
+
 var app = new Vue({
     el: '#app',
     store: store,
     data: {
+        admin: store.state.admin,
         currentView: store.state.view
     },
     methods: {
         setView: function setView() {
             this.currentView = store.state.view;
+        },
+        toggleAdmin: function toggleAdmin() {
+            store.state.admin = !store.state.admin;
+            this.admin = store.state.admin;
         }
     }
 });
 
-// const player = new Vue({
-//     el: '#barplayer'
-// });
-
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(14);
+module.exports = __webpack_require__(15);
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1200,7 +1271,7 @@ module.exports = __webpack_require__(14);
 
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(9);
-var Axios = __webpack_require__(16);
+var Axios = __webpack_require__(17);
 var defaults = __webpack_require__(4);
 
 /**
@@ -1235,14 +1306,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(6);
-axios.CancelToken = __webpack_require__(15);
+axios.CancelToken = __webpack_require__(16);
 axios.isCancel = __webpack_require__(7);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(30);
+axios.spread = __webpack_require__(31);
 
 module.exports = axios;
 
@@ -1251,7 +1322,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1315,7 +1386,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1323,10 +1394,10 @@ module.exports = CancelToken;
 
 var defaults = __webpack_require__(4);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(17);
-var dispatchRequest = __webpack_require__(18);
-var isAbsoluteURL = __webpack_require__(26);
-var combineURLs = __webpack_require__(24);
+var InterceptorManager = __webpack_require__(18);
+var dispatchRequest = __webpack_require__(19);
+var isAbsoluteURL = __webpack_require__(27);
+var combineURLs = __webpack_require__(25);
 
 /**
  * Create a new instance of Axios
@@ -1407,7 +1478,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1466,14 +1537,14 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(21);
+var transformData = __webpack_require__(22);
 var isCancel = __webpack_require__(7);
 var defaults = __webpack_require__(4);
 
@@ -1552,7 +1623,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1578,7 +1649,7 @@ module.exports = function enhanceError(error, config, code, response) {
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1610,7 +1681,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1637,7 +1708,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1680,7 +1751,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1755,7 +1826,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1774,7 +1845,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1834,7 +1905,7 @@ module.exports = (
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1855,7 +1926,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1930,7 +2001,7 @@ module.exports = (
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1949,7 +2020,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1993,7 +2064,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2027,97 +2098,163 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__player_js__ = __webpack_require__(39);
-var _this = this;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__player_js__ = __webpack_require__(10);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
-
-$('#back').on('click', function (e) {
-    alert('Back has not yet been implemented');
-});
-$('#forward').on('click', function (e) {
-    playFromQueue();
-});
-$('#progressbar').on('click', function (e) {
-    if (__WEBPACK_IMPORTED_MODULE_0__player_js__["a" /* default */].paused) return;
-    $('#player')[0].currentTime = $('#player')[0].duration * e.offsetX / $('#progressbar')[0].offsetWidth;
-});
-$('#volumebar').on('click', function (e) {
-    var volume = e.offsetX / $('#volumebar')[0].offsetWidth;
-    if (volume < 0.5) $("#volicon").attr("class", "glyphicon glyphicon-volume-down");else $("#volicon").attr("class", "glyphicon glyphicon-volume-up");
-    $('#player')[0].volume = volume;
-    $('#volume').css('width', e.offsetX + "px");
-});
-$('#volicon').on('click', function (e) {
-    if ($('#player')[0].muted) {
-        $('#player')[0].muted = false;
-        if ($('#player')[0].volume < 0.5) $(event.target).attr("class", "glyphicon glyphicon-volume-down");else $("#volicon").attr("class", "glyphicon glyphicon-volume-up");
-    } else {
-        $('#player')[0].muted = true;
-        $(event.target).attr("class", "glyphicon glyphicon-volume-off");
-    }
-});
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             artist: "-",
             duration: "-:--/-:--",
-            title: "No track playing"
+            percent: 0,
+            title: "No track playing",
+            volume: 1
         };
     },
     methods: {
+        mute: function mute(e) {
+            if ($('#audio')[0].muted) {
+                $('#audio')[0].muted = false;
+                if ($('#audio')[0].volume < 0.5) $(event.target).attr("class", "glyphicon glyphicon-volume-down");else $("#volicon").attr("class", "glyphicon glyphicon-volume-up");
+            } else {
+                $('#audio')[0].muted = true;
+                $(e.target).attr("class", "glyphicon glyphicon-volume-off");
+            }
+        },
         playFromQueue: function playFromQueue() {
             __WEBPACK_IMPORTED_MODULE_0__player_js__["a" /* default */].playFromQueue();
         },
-        updateDuration: function updateDuration() {
+        toggle: function toggle() {
+            __WEBPACK_IMPORTED_MODULE_0__player_js__["a" /* default */].toggle();
+        },
+        setProgress: function setProgress(e) {
+            if (audio.paused) return;
+            $('#audio')[0].currentTime = $('#audio')[0].duration * e.offsetX / $('#progressbar')[0].offsetWidth;
+        },
+        setVolume: function setVolume(e) {
+            var volume = e.offsetX / $('#volumebar')[0].offsetWidth;
+            if (volume < 0.5) $("#volicon").attr("class", "glyphicon glyphicon-volume-down");else $("#volicon").attr("class", "glyphicon glyphicon-volume-up");
+            audio.volume = volume;
+            this.volume = volume;
+        },
+        updateDuration: function updateDuration(e) {
             /**
              * Checks if there is no duration to cancel the function and prevent overflow errors.
              */
@@ -2125,10 +2262,10 @@ $('#volicon').on('click', function (e) {
                 return;
             }
 
-            var durationString = parseTime(e.target.duration);
-            var progress = parseTime(e.target.currentTime);
-            _this.duration = progress + "/" + durationString;
-            $('#progressbar > div').width(e.target.currentTime / e.target.duration * 100 + '%');
+            var durationString = __WEBPACK_IMPORTED_MODULE_0__player_js__["a" /* default */].parseTime(e.target.duration);
+            var progress = __WEBPACK_IMPORTED_MODULE_0__player_js__["a" /* default */].parseTime(e.target.currentTime);
+            this.duration = progress + "/" + durationString;
+            this.percent = e.target.currentTime / e.target.duration * 100;
         }
     },
     mounted: function mounted() {
@@ -2137,7 +2274,7 @@ $('#volicon').on('click', function (e) {
 });
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2186,7 +2323,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2262,13 +2399,95 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 34 */
-/***/ (function(module, exports) {
+/* 35 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: Unexpected token, expected { (52:7)\n\n\u001b[0m \u001b[90m 50 | \u001b[39m\u001b[90m//\u001b[39m\n \u001b[90m 51 | \u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 | \u001b[39m\u001b[36mimport\u001b[39m \u001b[36mdefault\u001b[39m from \u001b[32m'../../player.js'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m    | \u001b[39m       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 | \u001b[39m\n \u001b[90m 54 | \u001b[39m\u001b[36mexport\u001b[39m \u001b[36mdefault\u001b[39m {\n \u001b[90m 55 | \u001b[39m    data\u001b[33m:\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n");
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__player_js__ = __webpack_require__(10);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            album: {}
+        };
+    },
+    methods: {
+        play: function play(id) {
+            __WEBPACK_IMPORTED_MODULE_0__player_js__["a" /* default */].play(id);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        $.get({
+            url: document.location.origin + "/albums/" + this.$store.state.album,
+            error: function error(err) {
+                $('#content').html(err.responseText);
+            },
+            success: function success(data) {
+                _this.album = data;
+                // $('#table').DataTable();
+            }
+        });
+        console.log('Component mounted.');
+    }
+});
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2392,7 +2611,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2760,7 +2979,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3086,7 +3305,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -3117,7 +3336,7 @@ window.Vuex = __webpack_require__(68);
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(13);
+window.axios = __webpack_require__(14);
 
 window.axios.defaults.headers.common = {
   'X-CSRF-TOKEN': window.Laravel.csrfToken,
@@ -3138,72 +3357,6 @@ window.axios.defaults.headers.common = {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
-
-/***/ }),
-/* 39 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _this = this;
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    add: function add(ids) {
-        if (ids.lastIndexOf(',') === ids.length - 1) ids = ids.substring(0, ids.length - 1);
-        var array = ids.split(',');
-        array.forEach(function (id) {
-            _this.queue.push(id);
-        });
-        if ($('#player')[0].paused) {
-            _this.playFromQueue();
-        }
-    },
-    parseTime: function parseTime(time, recur) {
-        time = Math.floor(time);
-        var timeString = "";
-        timeString = time % 60 < 10 ? "0" + time % 60 + timeString : time % 60 + timeString;
-        if (time / 60 < 1 && !recur) return "0:" + timeString;
-        if (time / 60 < 1) return timeString;
-        return _this.parseTime(time / 60, true) + ":" + timeString;
-    },
-    play: function play(id) {
-        $.get({
-            url: document.location.origin + "/tracks/" + id,
-            success: function success(data) {
-                $('#source').attr('src', document.location.origin + "/tracks/" + id + "/audio");
-                var artists = "";
-                $.each(data.artists, function (index) {
-                    artists += data.artists[index].name + ' ';
-                });
-                $('#tracktitle').html(data.title);
-                $('#trackartist').html(artists);
-                $("#icon").attr("class", "glyphicon glyphicon-pause");
-                $('#player')[0].load();
-                $('#player')[0].play();
-            }
-        });
-    },
-    playFromQueue: function playFromQueue() {
-        if (!_this.queue[0]) {
-            $("#icon").attr("class", "glyphicon glyphicon-play");
-            $('#tracktitle').html("No track playing");
-            $('#trackartist').html("-");
-            $('#duration').html("-:--/-:--");
-            $('#progressbar > div').width('0%');
-            return;
-        }
-        _this.play(_this.queue[0]);
-        _this.queue.splice(0, 1);
-    },
-    queue: [],
-    toggle: function toggle() {
-        if ($('#player')[0].paused) {
-            $("#icon").attr("class", "glyphicon glyphicon-pause");
-            return $('#player')[0].play();
-        }
-        $("#icon").attr("class", "glyphicon glyphicon-play");
-        $('#player')[0].pause();
-    }
-});
 
 /***/ }),
 /* 40 */
@@ -5614,7 +5767,7 @@ exports.push([module.i, "\n.action-link[data-v-550b15e7] {\n    cursor: pointer;
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.toggle[data-v-68be972d] {\n    height: 75%;\n    line-height: 87.5%;\n    width: 7vh;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    background: transparent;\n    border-radius: 100%;\n    border-color: black;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n}\n.trackdata[data-v-68be972d] {\n    margin: 0;\n    color: black;\n}\n.trackdata[data-v-68be972d]:hover {\n    /* Starting position */\n    -webkit-transform:translateX(100%);\n    transform:translateX(100%);\n    /* Apply animation to this element */\n    -webkit-animation: scroll-left 8s linear infinite;\n    animation: scroll-left 8s linear infinite;\n}\n\n/* Move it (define the animation) */\n@-webkit-keyframes scroll-left {\n0%   { -webkit-transform: translateX(100%);\n}\n100% { -webkit-transform: translateX(-100%);\n}\n}\n@keyframes scroll-left {\n0%   { /* Browser bug fix */\n        -webkit-transform: translateX(100%); /* Browser bug fix */\n        transform: translateX(100%);\n}\n100% { /* Browser bug fix */\n        -webkit-transform: translateX(-100%); /* Browser bug fix */\n        transform: translateX(-100%);\n}\n}\n.bar[data-v-68be972d] {\n    background: gray;\n    border-radius: 1vw;\n    height: 1vh;\n    border: 2px solid black;\n}\n.bar > div[data-v-68be972d] {\n    background: #008080;\n    height: 100%;\n    border-radius: 1vw;\n}\n.vertical-center[data-v-68be972d] {\n    height: 100%;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n}\n", ""]);
 
 /***/ }),
 /* 45 */
@@ -32966,7 +33119,7 @@ return jQuery;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(69)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11), __webpack_require__(69)(module)))
 
 /***/ }),
 /* 47 */
@@ -33164,7 +33317,7 @@ __webpack_require__(65)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(31),
+  __webpack_require__(32),
   /* template */
   __webpack_require__(60),
   /* scopeId */
@@ -33198,7 +33351,7 @@ module.exports = Component.exports
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(32),
+  __webpack_require__(33),
   /* template */
   __webpack_require__(56),
   /* scopeId */
@@ -33232,7 +33385,7 @@ module.exports = Component.exports
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(33),
+  __webpack_require__(34),
   /* template */
   __webpack_require__(55),
   /* scopeId */
@@ -33266,7 +33419,7 @@ module.exports = Component.exports
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(34),
+  __webpack_require__(35),
   /* template */
   __webpack_require__(61),
   /* scopeId */
@@ -33304,7 +33457,7 @@ __webpack_require__(64)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(35),
+  __webpack_require__(36),
   /* template */
   __webpack_require__(59),
   /* scopeId */
@@ -33342,7 +33495,7 @@ __webpack_require__(63)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(36),
+  __webpack_require__(37),
   /* template */
   __webpack_require__(58),
   /* scopeId */
@@ -33380,7 +33533,7 @@ __webpack_require__(62)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(37),
+  __webpack_require__(38),
   /* template */
   __webpack_require__(57),
   /* scopeId */
@@ -33415,7 +33568,20 @@ module.exports = Component.exports
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "container"
-  }, [_vm._m(0), _vm._v(" "), _c('div', {
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "panel panel-default"
+  }, [_c('div', {
+    staticClass: "panel-heading"
+  }, [_vm._v("Actions")]), _vm._v(" "), _c('div', {
+    staticClass: "panel-body"
+  }, [(_vm.checkAdmin()) ? _c('a', {
+    staticClass: "btn btn-primary",
+    attrs: {
+      "href": ""
+    }
+  }, [_vm._v("Add Album")]) : _vm._e()])])]), _vm._v(" "), _c('div', {
     staticClass: "row"
   }, [_c('div', {
     staticClass: "panel panel-default"
@@ -33430,7 +33596,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "table"
     }
-  }, [_vm._m(1), _vm._v(" "), _c('tbody', _vm._l((_vm.albums), function(album) {
+  }, [_c('thead', [_c('tr', [_c('th', [_vm._v("ID")]), _vm._v(" "), _c('th', [_vm._v("Name")]), _vm._v(" "), _c('th', [_vm._v("Artist")]), _vm._v(" "), _c('th', [_vm._v("View")]), _vm._v(" "), (_vm.checkAdmin()) ? _c('th', [_vm._v("Edit")]) : _vm._e()])]), _vm._v(" "), _c('tbody', _vm._l((_vm.albums), function(album) {
     return _c('tr', [_c('td', [_vm._v(_vm._s(album.id))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(album.name))]), _vm._v(" "), _c('td', [_vm._v(_vm._s(album.artist.name))]), _vm._v(" "), _c('td', [_c('button', {
       staticClass: "btn btn-success",
       on: {
@@ -33438,31 +33604,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.setView('album-show', album.id)
         }
       }
-    }, [_vm._v("View")])]), _vm._v(" "), _c('td', [_c('button', {
+    }, [_vm._v("View")])]), _vm._v(" "), (_vm.checkAdmin()) ? _c('td', [_c('button', {
       staticClass: "btn btn-primary",
       on: {
         "click": function($event) {}
       }
-    }, [_vm._v("Edit")])])])
+    }, [_vm._v("Edit")])]) : _vm._e()])
   }))])])])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "row"
-  }, [_c('div', {
-    staticClass: "panel panel-default"
-  }, [_c('div', {
-    staticClass: "panel-heading"
-  }, [_vm._v("Actions")]), _vm._v(" "), _c('div', {
-    staticClass: "panel-body"
-  }, [_c('a', {
-    staticClass: "btn btn-primary",
-    attrs: {
-      "href": ""
-    }
-  }, [_vm._v("Add Album")])])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_vm._v("ID")]), _vm._v(" "), _c('th', [_vm._v("Name")]), _vm._v(" "), _c('th', [_vm._v("Artist")]), _vm._v(" "), _c('th', [_vm._v("View")]), _vm._v(" "), _c('th', [_vm._v("Edit")])])])
-}]}
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -34108,7 +34257,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "visibility": "hidden"
     },
     attrs: {
-      "id": "player"
+      "id": "audio"
     },
     on: {
       "ended": _vm.playFromQueue,
@@ -34140,7 +34289,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "display": "flex",
       "align-items": "center"
     }
-  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c('button', {
+  }, [_vm._m(0), _vm._v(" "), _c('button', {
+    staticClass: "toggle",
+    staticStyle: {
+      "margin": "1vh"
+    },
+    attrs: {
+      "id": "play"
+    },
+    on: {
+      "click": function($event) {
+        _vm.toggle()
+      }
+    }
+  }, [_c('span', {
+    staticClass: "glyphicon glyphicon-play",
+    staticStyle: {
+      "font-size": "4vh",
+      "color": "black"
+    },
+    attrs: {
+      "id": "icon"
+    }
+  })]), _vm._v(" "), _c('button', {
     staticStyle: {
       "background": "transparent",
       "border": "none"
@@ -34195,45 +34366,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "duration"
     }
-  }, [_vm._v(_vm._s(_vm.duration))])]), _vm._v(" "), _vm._m(2)])])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('button', {
-    staticStyle: {
-      "background": "transparent",
-      "border": "none"
-    },
-    attrs: {
-      "id": "back"
-    }
-  }, [_c('span', {
-    staticClass: "glyphicon glyphicon-step-backward",
-    staticStyle: {
-      "color": "black",
-      "font-size": "2vh"
-    }
-  })])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('button', {
-    staticClass: "toggle",
-    staticStyle: {
-      "margin": "1vh"
-    },
-    attrs: {
-      "id": "play",
-      "onclick": "toggle()"
-    }
-  }, [_c('span', {
-    staticClass: "glyphicon glyphicon-play",
-    staticStyle: {
-      "font-size": "4vh",
-      "color": "black"
-    },
-    attrs: {
-      "id": "icon"
-    }
-  })])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
+  }, [_vm._v(_vm._s(_vm.duration))])]), _vm._v(" "), _c('div', {
     staticClass: "col-md-9 vertical-center"
   }, [_c('div', {
     staticClass: "bar",
@@ -34242,12 +34375,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     attrs: {
       "id": "progressbar"
+    },
+    on: {
+      "click": _vm.setProgress
     }
   }, [_c('div', {
     staticClass: "barvalue",
-    staticStyle: {
-      "width": "0%"
-    },
+    style: ({
+      width: _vm.percent + '%'
+    }),
     attrs: {
       "id": "progress"
     }
@@ -34261,6 +34397,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     attrs: {
       "id": "volicon"
+    },
+    on: {
+      "click": _vm.mute
     }
   }), _vm._v(" "), _c('div', {
     staticClass: "bar",
@@ -34269,13 +34408,36 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     attrs: {
       "id": "volumebar"
+    },
+    on: {
+      "click": _vm.setVolume
     }
   }, [_c('div', {
     staticClass: "barvalue",
+    style: ({
+      width: _vm.volume * 100 + '%'
+    }),
     attrs: {
       "id": "volume"
     }
-  })])])
+  })])])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('button', {
+    staticStyle: {
+      "background": "transparent",
+      "border": "none"
+    },
+    attrs: {
+      "id": "back",
+      "onclick": "alert('Back has not yet been implemented')"
+    }
+  }, [_c('span', {
+    staticClass: "glyphicon glyphicon-step-backward",
+    staticStyle: {
+      "color": "black",
+      "font-size": "2vh"
+    }
+  })])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -43835,7 +43997,7 @@ Vue$3.compile = compileToFunctions;
 
 module.exports = Vue$3;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)))
 
 /***/ }),
 /* 68 */
@@ -44683,8 +44845,8 @@ module.exports = function(module) {
 /* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(11);
-module.exports = __webpack_require__(12);
+__webpack_require__(12);
+module.exports = __webpack_require__(13);
 
 
 /***/ })
