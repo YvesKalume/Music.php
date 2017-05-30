@@ -16,3 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+/**
+ * This is an authentication endpoint for first party clients that are also a
+ * part of the Music.php project and can use password grant API authentication.
+ */
+Route::post('/oauth/grant/password', 'PasswordGrantController');
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::resource('albums', 'AlbumController');
+    Route::resource('artists', 'ArtistController');
+    Route::resource('tracks', 'TrackController');
+});
