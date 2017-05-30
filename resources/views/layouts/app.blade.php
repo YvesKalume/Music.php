@@ -62,6 +62,12 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ route('settings') }}"><span class="glyphicon glyphicon-home"></span> User Settings</a></li>
                                     <li>
+                                        <a href="#" v-on:click="toggleAdmin()" v-cloak>
+                                            <span class="glyphicon glyphicon-cog"></span>
+                                            <span v-text="' ' + (admin ? 'Disable' : 'Enable') + ' Admin Mode'"></span>
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

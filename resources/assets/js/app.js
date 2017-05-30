@@ -15,15 +15,6 @@ require('./bootstrap');
 
 Vue.use(Vuex);
 
-Vue.mixin({
-    methods: {
-        setView: function(view) {
-            this.$store.commit('setView', view);
-            this.$emit('view');
-        }
-    }
-});
-
 Vue.component('album-index', require('./components/album/Index.vue'));
 Vue.component('album-show', require('./components/album/Show.vue'));
 Vue.component('bar-player', require('./components/BarPlayer.vue'));
@@ -49,6 +40,7 @@ Vue.component(
  */
 const store = new Vuex.Store({
     state: {
+        admin: false,
         album: null,
         view: "home"
     },
@@ -61,21 +53,32 @@ const store = new Vuex.Store({
     }
 });
 
+Vue.mixin({
+    methods: {
+        checkAdmin: function() {
+            return this.$store.state.admin;
+        },
+        setView: function(view) {
+            this.$store.commit('setView', view);
+            this.$emit('view');
+        }
+    }
+});
+
 const app = new Vue({
     el: '#app',
     store,
     data: {
+        admin: store.state.admin,
         currentView: store.state.view,
     },
     methods: {
         setView: function() {
             this.currentView = store.state.view;
+        },
+        toggleAdmin: function() {
+            store.state.admin = !store.state.admin;
+            this.admin = store.state.admin;
         }
     }
 });
-
-
-
-// const player = new Vue({
-//     el: '#barplayer'
-// });

@@ -4,7 +4,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Actions</div>
                 <div class="panel-body">
-                    <a class="btn btn-primary" href="">Add Album</a>
+                    <a class="btn btn-primary" href="" v-if="checkAdmin()">Add Album</a>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
                                 <th>Name</th>
                                 <th>Artist</th>
                                 <th>View</th>
-                                <th>Edit</th>
+                                <th v-if="checkAdmin()">Edit</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -28,7 +28,7 @@
                                 <td>{{ album.name }}</td>
                                 <td>{{ album.artist.name }}</td>
                                 <td><button class="btn btn-success" v-on:click="setView('album-show', album.id)">View</button></td>
-                                <td><button class="btn btn-primary" v-on:click="">Edit</button></td>
+                                <td v-if="checkAdmin()"><button class="btn btn-primary" v-on:click="">Edit</button></td>
                             </tr>
                         </tbody>
                     </table>
