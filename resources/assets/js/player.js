@@ -9,7 +9,7 @@ export default {
             this.playFromQueue();
         }
     },
-    parseTime: (time, recur) => {
+    parseTime: function(time, recur) {
         time = Math.floor(time);
         let timeString = "";
         timeString = time % 60 < 10 ? "0" + time % 60 + timeString : time % 60 + timeString;
@@ -29,12 +29,12 @@ export default {
                 $('#tracktitle').html(data.title);
                 $('#trackartist').html(artists);
                 $("#icon").attr("class", "glyphicon glyphicon-pause");
-                $('#player')[0].load();
-                $('#player')[0].play();
+                $('#audio')[0].load();
+                $('#audio')[0].play();
             }
         });
     },
-    playFromQueue: () => {
+    playFromQueue: function() {
         if (!this.queue[0]) {
             $("#icon").attr("class", "glyphicon glyphicon-play");
             $('#tracktitle').html("No track playing");
@@ -48,11 +48,11 @@ export default {
     },
     queue: [],
     toggle: () => {
-        if ($('#player')[0].paused) {
+        if ($('#audio')[0].paused) {
             $("#icon").attr("class", "glyphicon glyphicon-pause");
-            return $('#player')[0].play();
+            return $('#audio')[0].play();
         }
         $("#icon").attr("class", "glyphicon glyphicon-play");
-        $('#player')[0].pause();
+        $('#audio')[0].pause();
     }
 };
