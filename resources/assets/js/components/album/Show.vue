@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import default from '../../player.js';
+    import player from '../../player.js';
 
     export default {
         data: () => {
@@ -59,7 +59,6 @@
         },
         methods: {
             play: id => {
-                console.log(player);
                 player.play(id);
             }
         },
