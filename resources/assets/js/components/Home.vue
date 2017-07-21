@@ -3,15 +3,17 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">User Dashboard</div>
+                    <div class="panel-heading">Welcome back.</div>
                     <div class="panel-body">
-
+                        Here's what we have prepared for you.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">Albums</div>
                     <div class="panel-body">
-                        <button class="btn btn-primary" v-on:click="setView('album-index')">More Albums</button>
+                        <album-display v-for="album in albums" :album="album" :key="album.id" v-on:click.native="setAlbumView('album-show', album.id)">
+                        </album-display>
+                        <br><button class="btn btn-primary" v-on:click="setView('album-index')">More Albums</button>
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -29,16 +31,30 @@
     export default {
         data: () => {
             return {
-
+                albums: null
             }
         },
         methods: {
             setView: function(view) {
                 this.$store.commit('setView', view);
                 this.$emit('view');
+            },
+            setAlbumView: function(view, id) {
+                this.$store.commit('setAlbum', id);
+                this.$store.commit('setView', view);
+                this.$emit('view');
             }
         },
         mounted() {
+            $.get({
+                url: document.location.origin + "/albums",
+                error: err => {
+                    $('#content').html(err.responseText);
+                },
+                success: data => {
+                    this.albums = data;
+                }
+            });
             console.log('Component mounted.')
         }
     }

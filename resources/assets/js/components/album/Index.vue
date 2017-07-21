@@ -4,7 +4,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Actions</div>
                 <div class="panel-body">
-                    <a class="btn btn-primary" href="" v-if="checkAdmin()">Add Album</a>
+                    <a class="btn btn-primary" :href="create" v-if="checkAdmin()" target="_blank">Add Album</a>
                 </div>
             </div>
         </div>
@@ -42,7 +42,8 @@
     export default {
         data: () => {
             return {
-                albums: null
+                albums: null,
+                create: document.location.origin + "/albums/create"
             }
         },
         methods: {

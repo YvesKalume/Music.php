@@ -19,25 +19,33 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Tracks</div>
                     <div class="panel-body">
-                        <table id="table" style="width: 100%">
+                        <table id="table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th style="text-align: center;">#</th>
                                     <th>Title</th>
                                     <th>Artists</th>
-                                    <th>View</th>
-                                    <th>Edit</th>
+                                    <th>More</th>
+                                    <th v-if="checkAdmin()">Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr v-for="track in album.tracks">
-                                        <td>{{ track.id }}</td>
+                                    <tr v-for="track in album.tracks" style="line-height: 2vw;" v-on:dblclick="play(track.id)">
+                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track.id)">{{ track.id }}</td>
                                         <td>{{ track.title }}</td>
                                         <td>
                                             <a v-for="artist in track.artists">{{ artist.name }}</a>
                                         </td>
-                                        <td><button class="btn btn-success" v-on:click="play(track.id)">Play</button></td>
-                                        <td><a class="btn btn-primary" href="/tracks/edit">Edit</a></td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#" v-on:click="play(track.id)">Play</a></li>
+                                                    <li><a href="#">Queue</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td v-if="checkAdmin()"><a class="btn btn-primary" :href='"/tracks/" + track.id + "/edit"' target="_blank">Edit</a></td>
                                     </tr>
                             </tbody>
                         </table>
@@ -47,6 +55,12 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+    tr:hover {
+        background-color: DarkGray;
+    }
+</style>
 
 <script>
     import player from '../../player.js';
