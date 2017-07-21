@@ -15,9 +15,11 @@ require('./bootstrap');
 
 Vue.use(Vuex);
 
+Vue.component('album-display', require('./components/album/Display.vue'));
 Vue.component('album-index', require('./components/album/Index.vue'));
 Vue.component('album-show', require('./components/album/Show.vue'));
 Vue.component('bar-player', require('./components/BarPlayer.vue'));
+Vue.component('column', require('./components/Column.vue'));
 Vue.component('home', require('./components/Home.vue'));
 
 Vue.component(
@@ -34,6 +36,8 @@ Vue.component(
     'passport-personal-access-tokens',
     require('./components/passport/PersonalAccessTokens.vue')
 );
+
+Vue.component('text-input', require('./components/form/TextInput.vue'));
 
 /**
  * Load the store first so the app has data to fetch.
@@ -57,6 +61,9 @@ Vue.mixin({
     methods: {
         checkAdmin: function() {
             return this.$store.state.admin;
+        },
+        getView: function() {
+            return this.$store.state.view;
         },
         setView: function(view) {
             this.$store.commit('setView', view);
