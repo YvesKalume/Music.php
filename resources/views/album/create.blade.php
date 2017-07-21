@@ -1,4 +1,6 @@
-@extends('ajax')
+@extends('layouts.app')
+
+@section('content')
 <div class="container" id="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2" id="column">
@@ -16,7 +18,9 @@
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                        <text-input name="name" label="Name"></text-input>
+
+<!--                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name</label>
 
                             <div class="col-md-6">
@@ -28,7 +32,7 @@
                                     </span>
                                 @endif
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="form-group{{ $errors->has('artist') ? ' has-error' : '' }}">
                             <label for="artist" class="col-md-4 control-label">Artist</label>
@@ -120,3 +124,4 @@
         </div>
     </div>
 </div>
+@endsection

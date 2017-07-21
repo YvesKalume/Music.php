@@ -1,4 +1,6 @@
-@extends('ajax')
+@extends('layouts.app')
+
+@section('content')
 <div class="container" id="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2" id="column">
@@ -113,3 +115,4 @@
         </div>
     </div>
 </div>
+@endsection
