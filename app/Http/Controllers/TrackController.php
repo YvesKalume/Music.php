@@ -26,7 +26,8 @@ class TrackController extends Controller
     {
         //
         $tracks = Track::all();
-        return view('track/index', ['tracks' => $tracks]);
+        // return view('track/index', ['tracks' => $tracks]);
+        return $tracks;
     }
 
     /**
