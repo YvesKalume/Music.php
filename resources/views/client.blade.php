@@ -5,7 +5,16 @@
 @endsection
 
 @section('content')
-<div class="container" id="content"><component v-bind:is="currentView" v-on:view="setView"></component></div>
+<div class="container" id="content" style="width: 100%;">
+    <div class="row" style="width: 100%;">
+        <div class="col-md-2" style="margin-left: 0px; height: 100%;">
+            <column v-on:view="setView"></column>
+        </div>
+        <div class="col-md-10">
+            <component v-bind:is="currentView" v-on:view="setView"></component>
+        </div>
+    </div>
+</div>
 <bar-player></bar-player>
 @endsection
 
