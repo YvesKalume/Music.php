@@ -26,7 +26,6 @@ Route::get('/settings', function() {
     return view('settings');
 })->name('settings');
 Route::get('/tracks/{track}/audio', 'TrackController@audio');
-Route::get('/tracks/queue', 'TrackController@queue')->name('tracks.queue');
 
 Route::resource('albums', 'AlbumController');
 Route::resource('artists', 'ArtistController');

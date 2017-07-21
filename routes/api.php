@@ -25,7 +25,13 @@ Route::post('/oauth/grant/password', 'PasswordGrantController');
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/tracks/{track}/audio', 'TrackController@audio');
-    Route::resource('albums', 'AlbumController');
-    Route::resource('artists', 'ArtistController');
-    Route::resource('tracks', 'TrackController');
+    Route::resource('albums', 'AlbumController', ['except' => [
+        'create', 'edit'
+    ]]);
+    Route::resource('artists', 'ArtistController', ['except' => [
+        'create', 'edit'
+    ]]);
+    Route::resource('tracks', 'TrackController', ['except' => [
+        'create', 'edit'
+    ]]);
 });
