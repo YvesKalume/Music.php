@@ -2,6 +2,7 @@
     <div class="list-group">
         <a class="list-group-item" href="#" v-on:click="setView('home')" :class="getView() === 'home' ? 'active' : ''">Home</a>
         <a class="list-group-item" href="#" v-on:click="setView('album-index')" :class="getView() === 'album-index' ? 'active' : ''">Albums</a>
+        <a class="list-group-item" href="#" v-on:click="setView('queue')" :class="getView() === 'queue' ? 'active' : ''">Queue</a>
     </div>
 </template>
 

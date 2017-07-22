@@ -21,6 +21,7 @@ Vue.component('album-show', require('./components/album/Show.vue'));
 Vue.component('bar-player', require('./components/BarPlayer.vue'));
 Vue.component('column', require('./components/Column.vue'));
 Vue.component('home', require('./components/Home.vue'));
+Vue.component('queue', require('./components/Queue.vue'));
 
 Vue.component(
     'passport-clients',
@@ -38,6 +39,9 @@ Vue.component(
 );
 
 Vue.component('text-input', require('./components/form/TextInput.vue'));
+Vue.component('password-input', require('./components/form/PasswordInput.vue'));
+Vue.component('select-input', require('./components/form/SelectInput.vue'));
+Vue.component('submit-button', require('./components/form/SubmitButton.vue'));
 
 /**
  * Load the store first so the app has data to fetch.

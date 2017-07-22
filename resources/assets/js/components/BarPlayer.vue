@@ -134,6 +134,7 @@
                 }
             },
             playFromQueue: () => {
+                player.queue.splice(0, 1);
                 player.playFromQueue();
             },
             toggle: () => {

@@ -43,9 +43,9 @@ export default {
             $('#progressbar > div').width('0%');
             return;
         }
-        this.play(this.queue[0]);
-        this.queue.splice(0, 1);
+        this.play(this.queue[0].id);
     },
+    playing: false,
     queue: [],
     toggle: () => {
         if ($('#audio')[0].paused) {
