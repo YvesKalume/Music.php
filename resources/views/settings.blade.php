@@ -6,7 +6,15 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">User Settings</div>
-                <div class="panel-body">
+                <div class="panel-body" id="formpanel">
+                    <form class="form-horizontal" id="userform" role="form">
+                        {{ csrf_field() }}
+
+                        <input name="id" type="text" value="{{ $user->id }}" style="display: none;"></input>
+                        <text-input name="email" label="Email" value="{{ $user->email }}"></text-input>
+                        <password-input name="password" label="Password" hint="Leave blank to remain unchanged"></password-input>
+                        <submit-button url="{{ route('user.update', $user->id) }}"><submit-button>
+                    </form>
                 </div>
             </div>
             <div class="panel panel-default">
