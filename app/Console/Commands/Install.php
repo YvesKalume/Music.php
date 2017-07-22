@@ -11,14 +11,14 @@ class Install extends Command
      *
      * @var string
      */
-    protected $signature = 'install';
+    protected $signature = 'install:docker';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Installs the application, assuming prerequisites are met.';
+    protected $description = 'Installs the application if deployed using Docker.';
 
     /**
      * Create a new command instance.
@@ -37,9 +37,19 @@ class Install extends Command
      */
     public function handle()
     {
+        $this->info('Beginning app installation process...');
+
+        $this->info('Copying .env file...')
+        $process = new \Symfony\Component\Process\Process('cp --no-clobber /srv/www/.env.example /srv/env/.env');
+        $process->run();
+
+        $this->call('key:generate');
+
         $path = $this->laravel->environmentFilePath();
         $this->call('passport:install');
-        $client = Illuminate\Support\Facades\DB::table('oauth_clients')->where('password_client', 1)->first();
+
+        $this->info('Copying Passport password client settings...');
+        $client = \Illuminate\Support\Facades\DB::table('oauth_clients')->where('password_client', 1)->first();
         /**
          * This is the Laravel 5.4 method of replacing environment values which
          * is more to date. It's quite complicated however, so it only remains
@@ -59,5 +69,6 @@ class Install extends Command
         // $this->call('passport:install', [
         //     'user' => 1, '--queue' => 'default'
         // ]);
+        $this->info('Done! Remember to edit the .env file to set this project into production.');
     }
 }
