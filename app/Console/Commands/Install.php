@@ -39,7 +39,7 @@ class Install extends Command
     {
         $this->info('Beginning app installation process...');
 
-        $this->info('Copying .env file...')
+        $this->info('Copying .env file...');
         $process = new \Symfony\Component\Process\Process('cp --no-clobber /srv/www/.env.example /srv/env/.env');
         $process->run();
 
