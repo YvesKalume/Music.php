@@ -13,7 +13,7 @@
                         <input name="id" type="text" value="{{ $user->id }}" style="display: none;"></input>
                         <text-input name="email" label="Email" value="{{ $user->email }}"></text-input>
                         <password-input name="password" label="Password" hint="Leave blank to remain unchanged"></password-input>
-                        <submit-button url="{{ route('user.update', $user->id) }}"><submit-button>
+                        <submit-button btn-style="btn-success" method="PUT" url="{{ route('user.update', $user->id) }}" label="Update"><submit-button>
                     </form>
                 </div>
             </div>
