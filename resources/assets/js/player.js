@@ -9,15 +9,7 @@ export default {
             this.playFromQueue();
         }
     },
-    parseTime: function(time, recur) {
-        time = Math.floor(time);
-        let timeString = "";
-        timeString = time % 60 < 10 ? "0" + time % 60 + timeString : time % 60 + timeString;
-        if (time / 60 < 1 && !recur) return "0:" + timeString;
-        if (time / 60 < 1) return timeString;
-        return this.parseTime(time / 60, true) + ":" + timeString;
-    },
-    play: id => {
+    getAudio: function(id) {
         $.get({
             url: document.location.origin + "/tracks/" + id,
             success: data => {
@@ -26,19 +18,46 @@ export default {
                 $.each(data.artists, index => {
                     artists += `${data.artists[index].name} `;
                 });
-                $('#tracktitle').html(data.title);
-                $('#trackartist').html(artists);
+                this.status.setData(data);
                 $("#icon").attr("class", "glyphicon glyphicon-pause");
                 $('#audio')[0].load();
                 $('#audio')[0].play();
             }
         });
     },
+    getPercent: function() {
+        let data = this.status.getData();
+        return data.currentTime / data.duration * 100;
+    },
+    next: function() {
+        $('#audio')[0].pause();
+        this.queue.splice(0, 1);
+        this.playFromQueue();
+    },
+    parseTime: function(time, recur) {
+        time = Math.floor(time);
+        let timeString = "";
+        timeString = time % 60 < 10 ? "0" + time % 60 + timeString : time % 60 + timeString;
+        if (time / 60 < 1 && !recur) return "0:" + timeString;
+        if (time / 60 < 1) return timeString;
+        return this.parseTime(time / 60, true) + ":" + timeString;
+    },
+    play: function(track) {
+        this.queue.splice(0, 0, track);
+        this.getAudio(track.id);
+    },
+    push: tracks => {
+        for (let i = 0; i < tracks.length; i++) {
+            queue.push(tracks);
+        }
+        if (!this.playing) {
+            getAudio(this.queue[0].id);
+        }
+    },
     playFromQueue: function() {
         if (!this.queue[0]) {
             $("#icon").attr("class", "glyphicon glyphicon-play");
-            $('#tracktitle').html("No track playing");
-            $('#trackartist').html("-");
+            this.status.resetData();
             $('#duration').html("-:--/-:--");
             $('#progressbar > div').width('0%');
             return;
@@ -47,6 +66,40 @@ export default {
     },
     playing: false,
     queue: [],
+    status: {
+        properties: {
+            data: {
+                artists: "-",
+                currentTime: 0,
+                duration: 0,
+                title: "No track playing"
+            },
+            playing: false
+        },
+        getData() {
+            return this.properties.data;
+        },
+        getStatus() {
+            return this.properties.playing;
+        },
+        resetData() {
+            this.properties.data.title = "No track playing";
+            this.properties.data.artists = "-";
+            this.properties.data.currentTime = 0;
+            this.properties.data.duration = 0;
+        },
+        setData(data) {
+            this.properties.data.title = data.title;
+            let artists = "";
+            $.each(data.artists, index => {
+                artists += `${data.artists[index].name} `;
+            });
+            this.properties.data.artists = artists;
+        },
+        setStatus(status) {
+            this.properties.playing = status;
+        }
+    },
     toggle: () => {
         if ($('#audio')[0].paused) {
             $("#icon").attr("class", "glyphicon glyphicon-pause");

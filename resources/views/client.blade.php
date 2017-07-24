@@ -11,7 +11,7 @@
             <column v-on:view="setView"></column>
         </div>
         <div class="col-md-10">
-            <component v-bind:is="currentView" v-on:view="setView"></component>
+            <component v-bind:is="getView()"></component>
         </div>
     </div>
 </div>

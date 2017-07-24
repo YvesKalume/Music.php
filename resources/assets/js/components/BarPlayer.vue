@@ -12,14 +12,16 @@
                     <button class="toggle" id="play" v-on:click="toggle()" style="margin: 1vh;">
                         <span id="icon" class="glyphicon glyphicon-play" style="font-size:4vh; color: black;"></span>
                     </button>
-                    <button id="forward" style="background:transparent; border:none;" v-on:click="playFromQueue">
+                    <!-- Typically I would remove the parenthesis for readability,
+                    but this would mess up the "this" reference. -->
+                    <button id="forward" style="background:transparent; border:none;" v-on:click="player.next()">
                         <span class="glyphicon glyphicon-step-forward" style="color: black; font-size:2vh;"></span>
                     </button>
                 </div>
                 <div class="col-md-2" style="height: 100%; display: flex; align-items: center;">
                     <span id="" style="flex-grow: 1; white-space: nowrap; overflow: hidden; vertical-align: middle;">
-                        <p class="trackdata" id="tracktitle" style="font-weight: bold;">{{ title }}</p>
-                        <p class="trackdata" id="trackartist">{{ artist }}</p>
+                        <p class="trackdata" id="tracktitle" style="font-weight: bold;">{{ player.status.getData().title }}</p>
+                        <p class="trackdata" id="trackartist">{{ player.status.getData().artists }}</p>
                     </span>
                     <span id="duration" style="color: black; margin-left: 1vw;">{{ duration }}</span>
                 </div>
@@ -27,7 +29,7 @@
                     <div class="bar" id="progressbar" style="width: 100%;" v-on:click="setProgress">
                         <div class="barvalue" id="progress" v-bind:style="{ width: percent + '%' }"></div>
                     </div>
-                    <span class="glyphicon glyphicon-volume-up" id="volicon" style="color:black; margin-left: 2vw; margin-right: .5vw; font-size: 2vh;" v-on:click="mute"></span>
+                    <span class="glyphicon" id="volicon" :class="getVolumeStatus()" v-on:click="mute()"></span>
                     <div class="bar" id="volumebar" style="width: 10%;" v-on:click="setVolume">
                         <div class="barvalue" id="volume" v-bind:style="{ width: volume * 100 + '%' }"></div>
                     </div>
@@ -107,6 +109,13 @@
         display: flex;
         align-items: center;
     }
+
+    #volicon {
+        color: black;
+        margin-left: 2vw;
+        margin-right: .5vw;
+        font-size: 2vh;
+    }
 </style>
 
 <script>
@@ -115,22 +124,31 @@
     export default {
         data: function() {
             return {
-                artist: "-",
                 duration: "-:--/-:--",
                 percent: 0,
-                title: "No track playing",
-                volume: 1
+                muted: false,
+                volume: 1,
+                player: player
             }
         },
         methods: {
-            mute: e => {
+            getVolumeStatus: function() {
+                if (this.muted) {
+                    return "glyphicon-volume-off";
+                } else if (this.volume < 0.5) {
+                    return "glyphicon-volume-down";
+                } else {
+                    return "glyphicon-volume-up";
+                }
+            },
+            mute: function() {
+                // But why isn't this binded?! Well, HTML's muted attribute is only initial and is not a constant bind. :/
                 if ($('#audio')[0].muted) {
                     $('#audio')[0].muted = false;
-                    if ($('#audio')[0].volume < 0.5) $(event.target).attr("class", "glyphicon glyphicon-volume-down");
-                    else $("#volicon").attr("class", "glyphicon glyphicon-volume-up");
+                    this.muted = false;
                 } else {
                     $('#audio')[0].muted = true;
-                    $(e.target).attr("class", "glyphicon glyphicon-volume-off");
+                    this.muted = true;
                 }
             },
             playFromQueue: () => {
@@ -146,8 +164,6 @@
             },
             setVolume: function(e) {
                 let volume = e.offsetX / $('#volumebar')[0].offsetWidth;
-                if (volume < 0.5) $("#volicon").attr("class", "glyphicon glyphicon-volume-down");
-                else $("#volicon").attr("class", "glyphicon glyphicon-volume-up");
                 audio.volume = volume;
                 this.volume = volume;
             },

@@ -18,10 +18,13 @@ Vue.use(Vuex);
 Vue.component('album-display', require('./components/album/Display.vue'));
 Vue.component('album-index', require('./components/album/Index.vue'));
 Vue.component('album-show', require('./components/album/Show.vue'));
+Vue.component('file-handler', require('./components/FileHandler.vue'));
 Vue.component('bar-player', require('./components/BarPlayer.vue'));
 Vue.component('column', require('./components/Column.vue'));
 Vue.component('home', require('./components/Home.vue'));
 Vue.component('queue', require('./components/Queue.vue'));
+Vue.component('track-index', require('./components/track/Index.vue'));
+Vue.component('track-upload', require('./components/TrackUploadPanel.vue'));
 
 Vue.component(
     'passport-clients',
@@ -71,7 +74,11 @@ Vue.mixin({
         },
         setView: function(view) {
             this.$store.commit('setView', view);
-            this.$emit('view');
+            if (arguments.length > 1) {
+                for (let i = 1; i < arguments.length; i++) {
+                    this.$store.commit(arguments[i][0], arguments[i][1]);
+                }
+            }
         }
     }
 });
@@ -84,8 +91,9 @@ const app = new Vue({
         currentView: store.state.view,
     },
     methods: {
-        setView: function() {
+        getView: function() {
             this.currentView = store.state.view;
+            return store.state.view;
         },
         toggleAdmin: function() {
             store.state.admin = !store.state.admin;

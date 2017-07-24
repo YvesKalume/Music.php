@@ -1,8 +1,10 @@
 <template>
     <div class="list-group">
         <a class="list-group-item" href="#" v-on:click="setView('home')" :class="getView() === 'home' ? 'active' : ''">Home</a>
-        <a class="list-group-item" href="#" v-on:click="setView('album-index')" :class="getView() === 'album-index' ? 'active' : ''">Albums</a>
         <a class="list-group-item" href="#" v-on:click="setView('queue')" :class="getView() === 'queue' ? 'active' : ''">Queue</a>
+        <li class="dropdown-header">Media</li>
+        <a class="list-group-item" href="#" v-on:click="setView('album-index')" :class="getView() === 'album-index' ? 'active' : ''">Albums</a>
+        <a class="list-group-item" href="#" v-on:click="setView('track-index')" :class="getView() === 'track-index' ? 'active' : ''">Tracks</a>
     </div>
 </template>
 
@@ -18,12 +20,6 @@
             return {
                 active: this.$store.state.view
             }
-        },
-        methods: {
-            setView: function(view) {
-                this.$store.commit('setView', view);
-                this.$emit('view');
-            }
-        },
+        }
     }
 </script>

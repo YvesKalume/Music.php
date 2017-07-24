@@ -11,9 +11,12 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Albums</div>
                     <div class="panel-body">
-                        <album-display v-for="album in albums" :album="album" :key="album.id" v-on:click.native="setAlbumView('album-show', album.id)">
-                        </album-display>
-                        <br><button class="btn btn-primary" v-on:click="setView('album-index')">More Albums</button>
+                        <div style="display: flex; flex-wrap: wrap; align-content: space-between; justify-content: space-evenly;">
+                            <album-display v-for="album in albums" :album="album" :key="album.id" v-on:dblclick.native="setView('album-show', ['setAlbum', album.id])">
+                            </album-display>
+                        </div>
+                        <br>
+                        <button class="btn btn-primary" v-on:click="setView('album-index')">More Albums</button>
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -34,17 +37,6 @@
                 albums: null
             }
         },
-        methods: {
-            setView: function(view) {
-                this.$store.commit('setView', view);
-                this.$emit('view');
-            },
-            setAlbumView: function(view, id) {
-                this.$store.commit('setAlbum', id);
-                this.$store.commit('setView', view);
-                this.$emit('view');
-            }
-        },
         mounted() {
             $.get({
                 url: document.location.origin + "/albums",
@@ -55,7 +47,7 @@
                     this.albums = data;
                 }
             });
-            console.log('Component mounted.')
+            console.log('Component mounted.');
         }
     }
 </script>
