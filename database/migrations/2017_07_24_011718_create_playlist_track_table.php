@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGenreTrackTable extends Migration
+class CreatePlaylistTrackTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateGenreTrackTable extends Migration
      */
     public function up()
     {
-        Schema::create('genre_track', function (Blueprint $table) {
-            $table->unsignedInteger('genre_id');
+        Schema::create('playlist_track', function (Blueprint $table) {
+            $table->unsignedInteger('playlist_id');
             $table->unsignedInteger('track_id');
             $table->timestamps();
 
-            $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade');
+            $table->foreign('playlist_id')->references('id')->on('playlists')->onDelete('cascade');
             $table->foreign('track_id')->references('id')->on('tracks')->onDelete('cascade');
         });
     }
@@ -30,6 +30,6 @@ class CreateGenreTrackTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('genre_track');
+        Schema::dropIfExists('playlist_track');
     }
 }

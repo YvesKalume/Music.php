@@ -13,7 +13,15 @@ class CreateAlbumGenreTable extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('album_genre', function (Blueprint $table) {
+            $table->unsignedInteger('album_id');
+            $table->unsignedInteger('genre_id');
+            $table->unsignedInteger('number')->default(null);
+            $table->timestamps();
+
+            $table->foreign('album_id')->references('id')->on('albums')->onDelete('cascade');
+            $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade');
+        });
     }
 
     /**
@@ -23,6 +31,6 @@ class CreateAlbumGenreTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('album_genre');
     }
 }

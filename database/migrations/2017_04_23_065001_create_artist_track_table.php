@@ -30,6 +30,6 @@ class CreateArtistTrackTable extends Migration
      */
     public function down()
     {
-        Schema::drop('artist_track');
+        Schema::dropIfExists('artist_track');
     }
 }

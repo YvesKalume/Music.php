@@ -16,6 +16,8 @@ class CreateArtistsTable extends Migration
         Schema::create('artists', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->text('description')->default(null);
+            $table->string('path')->default(null);
             $table->timestamps();
         });
     }
@@ -28,7 +30,7 @@ class CreateArtistsTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::drop('artists');
+        Schema::dropIfExists('artists');
         Schema::enableForeignKeyConstraints();
     }
 }

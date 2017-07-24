@@ -16,7 +16,8 @@ class CreateAlbumsTable extends Migration
         Schema::create('albums', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('path');
+            $table->text('description');
+            $table->string('path')->default(null);
             $table->unsignedInteger('artist_id')->default(1);
             $table->timestamps();
         });
@@ -29,6 +30,8 @@ class CreateAlbumsTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('albums');
+        Schema::enableForeignKeyConstraints();
     }
 }

@@ -16,6 +16,8 @@ class CreateTracksTable extends Migration
         Schema::create('tracks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
+            $table->text('description')->default(null);
+            $table->unsignedInteger('bpm')->default(null);
             $table->string('path');
             $table->timestamps();
         });
@@ -29,7 +31,7 @@ class CreateTracksTable extends Migration
     public function down()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::drop('tracks');
+        Schema::dropIfExists('tracks');
         Schema::enableForeignKeyConstraints();
     }
 }

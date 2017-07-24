@@ -16,6 +16,7 @@ class CreateAlbumTrackTable extends Migration
         Schema::create('album_track', function (Blueprint $table) {
             $table->unsignedInteger('album_id');
             $table->unsignedInteger('track_id');
+            $table->unsignedInteger('number')->default(null);
             $table->timestamps();
 
             $table->foreign('album_id')->references('id')->on('albums')->onDelete('cascade');
@@ -30,6 +31,6 @@ class CreateAlbumTrackTable extends Migration
      */
     public function down()
     {
-        Schema::drop('album_track');
+        Schema::dropIfExists('album_track');
     }
 }
