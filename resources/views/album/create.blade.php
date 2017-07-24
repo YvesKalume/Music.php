@@ -20,7 +20,7 @@
 
                         <text-input name="name" label="Name"></text-input>
                         <select-input name="artist" label="Artist"></select-input>
-                        <submit-button style="btn-success" label="Create" url="{{ route('albums.store') }}" method="POST"></submit-button>
+                        <submit-button btn-style="btn-success" label="Create" url="{{ route('albums.store') }}" method="POST"></submit-button>
                     </form>
                 </div>
             </div>

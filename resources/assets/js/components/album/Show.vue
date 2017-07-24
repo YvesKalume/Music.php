@@ -31,7 +31,10 @@
                             </thead>
                             <tbody>
                                     <tr v-for="track in album.tracks" style="line-height: 2vw;" v-on:dblclick="play(track.id)">
-                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track.id)">{{ track.id }}</td>
+                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track.id)">
+                                            <span></span>
+                                            <span>{{ track.id }}</span>
+                                        </td>
                                         <td>{{ track.title }}</td>
                                         <td>
                                             <a v-for="artist in track.artists">{{ artist.name }}</a>
@@ -57,8 +60,11 @@
 </template>
 
 <style scoped>
-    tr:hover {
+    tbody > tr:hover {
         background-color: DarkGray;
+    }
+    tbody > tr td span:first-child {
+
     }
 </style>
 
@@ -91,12 +97,22 @@
             $.get({
                 url: document.location.origin + "/albums/" + this.$store.state.album,
                 error: err => {
-                    $('#content').html(err.responseText);
+                    let newWindow = window.open("", "_blank");
+                    newWindow.document.write(err.responseText);
+                    newWindow.stop();
                 },
                 success: data => {
                     this.album = data;
                     // $('#table').DataTable();
                 }
+            });
+            $('tbody').on('mouseenter', 'tr > td:first-child', event => {
+                $(event.target).find("span:first-child").addClass("glyphicon glyphicon-play");
+                $(event.target).find("span:nth-child(2)").hide();
+            });
+            $('tbody').on('mouseleave', 'tr > td:first-child', event => {
+                $(event.target).find("span:first-child").removeClass("glyphicon glyphicon-play");
+                $(event.target).find("span:nth-child(2)").show();
             });
             console.log('Component mounted.')
         }

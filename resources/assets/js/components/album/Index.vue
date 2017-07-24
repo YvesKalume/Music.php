@@ -27,7 +27,7 @@
                                 <td>{{ album.id }}</td>
                                 <td>{{ album.name }}</td>
                                 <td>{{ album.artist.name }}</td>
-                                <td><button class="btn btn-success" v-on:click="setView('album-show', album.id)">View</button></td>
+                                <td><button class="btn btn-success" v-on:click="setView('album-show', ['setAlbum', album.id])">View</button></td>
                                 <td v-if="checkAdmin()"><button class="btn btn-primary" v-on:click="">Edit</button></td>
                             </tr>
                         </tbody>
@@ -44,13 +44,6 @@
             return {
                 albums: null,
                 create: document.location.origin + "/albums/create"
-            }
-        },
-        methods: {
-            setView: function(view, id) {
-                this.$store.commit('setAlbum', id);
-                this.$store.commit('setView', view);
-                this.$emit('view');
             }
         },
         mounted() {
