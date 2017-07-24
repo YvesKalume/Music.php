@@ -45,8 +45,7 @@ class Install extends Command
 
         $this->call('key:generate');
 
-        $this->call('migrate');
-        $this->call('db:seed');
+        $this->call('migrate:refresh --seed');
 
         $path = $this->laravel->environmentFilePath();
         $this->call('passport:install');

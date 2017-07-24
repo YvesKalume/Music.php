@@ -16,7 +16,7 @@ class CreateGenresTable extends Migration
         Schema::create('genres', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -28,7 +28,7 @@ class CreateGenresTable extends Migration
      */
     public function down()
     {
-        SSchema::disableForeignKeyConstraints();
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('genres');
         Schema::enableForeignKeyConstraints();
     }

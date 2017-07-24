@@ -16,7 +16,7 @@ class CreateAlbumTrackTable extends Migration
         Schema::create('album_track', function (Blueprint $table) {
             $table->unsignedInteger('album_id');
             $table->unsignedInteger('track_id');
-            $table->unsignedInteger('number')->default(null);
+            $table->unsignedInteger('number')->nullable();
             $table->timestamps();
 
             $table->foreign('album_id')->references('id')->on('albums')->onDelete('cascade');
