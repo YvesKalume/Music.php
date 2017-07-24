@@ -1,30 +1,26 @@
 <template>
     <div class="form-group">
         <div class="col-md-offset-4 col-md-8">
-            <button class="btn" :class="style" v-on:click="submit">{{label}}</button>
+            <button class="btn" :class="btnStyle" v-on:click="submit">{{label}}</button>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        data: function() {
-            return {
-                form: null
-            }
-        },
         methods: {
             submit: function() {
-                var formData = new FormData(this.form);
+                var formData = new FormData($("#" + this.form)[0]);
+                console.log("Running submit function...");
                 formData.append('_method', this.method);
-                if (document.getElementById('file') !== null) {
-                    formData.append("file", document.getElementById('file').files[0], "album.png");
+                if (this.file) {
+                    formData.append("file", this.file, "file");
                 }
                 $.ajax({
                     url: this.url,
                     data: formData,
                     error: err => {
-                        console.error('Error updating user');
+                        console.error('Error submitting form...');
                         console.log(err.responseText);
                     },
                     headers: {
@@ -34,17 +30,11 @@
                     contentType: false,
                     processData: false,
                     success: (data) => {
-                        $('#formpanel').html("Submitted!");
+                        $("#" + this.form).parent().html("Submitted!");
                     }
                 });
             }
         },
-        mounted() {
-            $('#formpanel').submit(function(e) {
-                e.preventDefault();
-            });
-            this.form = $('#userform')[0];
-        },
-        props: ['style','label','url','method']
+        props: ['btnStyle', 'form', 'label', 'url', 'method', 'file']
     }
 </script>

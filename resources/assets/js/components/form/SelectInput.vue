@@ -3,10 +3,10 @@
         <label :for="name" class="col-md-4 control-label">{{label}}</label>
 
         <div class="col-md-6">
-            <select class="artists form-control" :id="name" :name="name" style="width: 100%" required>
-                <option selected disabled value="select">Select Artist</option>
-                <option v-for="artist in artists" :value="artist.id">{{ artist.name }}</option>
-                <option id="addartist" value="addartist">+ Add Artist</option>
+            <select class="artists form-control" :id="name" :name="name" style="width: 100%" :multiple="multiple" required>
+                <option selected disabled value="select" v-if="!multiple">Select...</option>
+                <option v-for="item in array" v-on:mousedown="toggle" :value="item.id">{{ item.name }}</option>
+                <option id="addartist" value="addartist" v-on:click="addItem">+ Add {{ type.charAt(0).toUpperCase() + type.slice(1) }}</option>
             </select>
         </div>
     </div>
@@ -16,48 +16,61 @@
     export default {
         data: () => {
             return {
-                artists: null
+                array: null
             }
         },
-        mounted() {
-            $.ajax({
-                url: document.location.origin + "/artists",
-                error: err => {
-                    console.log(err);
-                },
-                success: data => {
-                    this.artists = data;
-                }
-            });
-            $('select').on('change', event => {
-                if ($(event.target).val() !== "addartist") return;
-                $(event.target).prop("selected", true);
-                let artist = prompt("Please enter the name of the artist you would like to add.");
+        methods: {
+            addItem: function(event) {
+                $(event.target).prop("selected", false);
+                let artist = prompt("Please enter the name of the item you would like to add.");
                 if (!artist) {
-                    return alert("Please enter a name for the artist.");
+                    return alert("Please enter a name for the item.");
                 }
                 let formData = new FormData();
                 formData.append("name", artist);
-                formData.append("_token", $('meta[name="csrf-token"]').attr('content'));
+                formData.append("quicksave", true);
                 $.post({
-                   url: document.location.origin + "/artists",
+                    url: document.location.origin + "/" + this.type,
                     data: formData,
                     contentType: false,
                     processData: false,
+                    error: (e) => {
+                        console.log(e.responseText);
+                        alert("Error on adding item...")
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     success: (data) => {
                         if(data.status === "success") {
-                            alert("Artist added successfully!");
-                            $('.artists').prepend($('<option>', {
+                            alert("Item added successfully!");
+                            $(event.target).parent().prepend($('<option>', {
                                 value: data.id,
                                 text: artist
                             }));
                         }
                     }
                 });
-                $("select").val("select");
+            },
+            toggle: function(e) {
+                if (!this.multiple) return;
+                e.preventDefault();
+                $(e.target).prop("selected", !$(e.target).prop("selected"));
+            }
+        },
+        mounted() {
+            $.ajax({
+                url: document.location.origin + "/" + this.type,
+                error: err => {
+                    console.log(err);
+                },
+                success: data => {
+                    this.array = data;
+                }
             });
+
             console.log("SelectInput mounted successfully");
         },
-        props: ["name", "label"]
+        props: ["name", "label", "multiple", "type"]
     }
 </script>
