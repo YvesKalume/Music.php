@@ -71,6 +71,13 @@
 
             console.log("SelectInput mounted successfully");
         },
+        /**
+         * Properties used to define the select input.
+         * @param {string} label - The label for the input that will appear on the form. Required.
+         * @param {boolean} multiple - Whether or not this input can select multiple values.
+         * @param {string} name - The name of the input that the server will receive. Required.
+         * @param {string} type - The model type that this select input has access to.
+         */
         props: ["name", "label", "multiple", "type"]
     }
 </script>

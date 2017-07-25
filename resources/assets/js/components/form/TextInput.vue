@@ -10,6 +10,12 @@
 
 <script>
     export default {
+        /**
+         * Properties used to define the text input.
+         * @param {string} label - The label for the input that will appear on the form. Required.
+         * @param {string} name - The name of the input that the server will receive. Required.
+         * @param {string} value - The initial value of the text input.
+         */
         props: ['name', 'label', 'value']
     }
 </script>
