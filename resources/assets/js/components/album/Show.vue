@@ -7,11 +7,11 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <img :src="'/albums/' + this.$store.state.album + '/image'" style="width:100%;">
+                                <img :src="'/albums/' + this.$store.state.album + '/image'" onerror="this.src='/img/noalbum.svg'" style="width:100%;">
                             </div>
-                            <div class="col-md-9">
-                                Insert placeholder for description of album.<br>
-                                <button class="btn btn-primary" v-on:click="queue">Queue</button>
+                            <div class="col-md-9" style="height: 100%;">
+                                <p>Insert placeholder for description of album.</p>
+                                <button class="btn btn-primary" v-on:click="push(album.tracks)">Queue</button>
                             </div>
                         </div>
                     </div>
@@ -30,8 +30,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr v-for="track in album.tracks" style="line-height: 2vw;" v-on:dblclick="play(track.id)">
-                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track.id)">
+                                    <tr v-for="track in album.tracks" style="line-height: 2vw;" v-on:dblclick="play(track)">
+                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track)">
                                             <span></span>
                                             <span>{{ track.id }}</span>
                                         </td>
@@ -43,8 +43,8 @@
                                             <div class="dropdown">
                                                 <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href="#" v-on:click="play(track.id)">Play</a></li>
-                                                    <li><a href="#">Queue</a></li>
+                                                    <li><a href="#" v-on:click="play(track)">Play</a></li>
+                                                    <li><a href="#" v-on:click="push([track])">Queue</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -63,9 +63,6 @@
     tbody > tr:hover {
         background-color: DarkGray;
     }
-    tbody > tr td span:first-child {
-
-    }
 </style>
 
 <script>
@@ -75,22 +72,22 @@
         data: () => {
             return {
                 // If set to null, the application will complain about not finding tracks of null. Leave as empty object.
-                album: {}
+                album: {},
+                player: player
             }
         },
         methods: {
-            play: id => {
-                player.play(id);
+            play: function(track) {
+                let parsedTrack = track;
+                parsedTrack.album = this.album.id;
+                player.play(parsedTrack);
             },
-            queue: function() {
-                console.log("Adding tracks to queue");
-                for (let i = 0; i < this.album.tracks.length; i++) {
-                    player.queue.push(this.album.tracks[i]);
+            push: function(tracks) {
+                let parsedTracks = tracks;
+                for (let i = 0; i < parsedTracks.length; i++) {
+                    parsedTracks[i].album = this.album.id;
                 }
-                if (!player.playing) {
-                    console.log("Player is not currently playing. Starting playback");
-                    player.playFromQueue();
-                }
+                player.push(parsedTracks);
             }
         },
         mounted() {
@@ -103,7 +100,9 @@
                 },
                 success: data => {
                     this.album = data;
-                    // $('#table').DataTable();
+                    this.$nextTick(() => {
+                        // $('#table').DataTable();
+                    });
                 }
             });
             $('tbody').on('mouseenter', 'tr > td:first-child', event => {

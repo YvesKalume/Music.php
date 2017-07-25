@@ -18,8 +18,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Artist</th>
-                                <th>View</th>
-                                <th v-if="checkAdmin()">Edit</th>
+                                <th>More</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -27,8 +26,17 @@
                                 <td>{{ album.id }}</td>
                                 <td>{{ album.name }}</td>
                                 <td>{{ album.artist.name }}</td>
-                                <td><button class="btn btn-success" v-on:click="setView('album-show', ['setAlbum', album.id])">View</button></td>
-                                <td v-if="checkAdmin()"><button class="btn btn-primary" v-on:click="">Edit</button></td>
+                                <td>
+                                    <div class="dropdown">
+                                        <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#" v-on:click="setView('album-show', ['setAlbum', album.id])">View</a></li>
+                                            <li><a href="#" v-on:click="play(track)">Play</a></li>
+                                            <li><a href="#" v-if="checkAdmin()" :href="edit(album.id)" target="_blank">Edit</a></li>
+                                            <li><a href="#" v-on:click="push([track])">Queue</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -44,6 +52,11 @@
             return {
                 albums: null,
                 create: document.location.origin + "/albums/create"
+            }
+        },
+        methods: {
+            edit: id => {
+                return "/albums/" + id + "/edit"
             }
         },
         mounted() {

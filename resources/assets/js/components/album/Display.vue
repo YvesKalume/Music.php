@@ -1,33 +1,35 @@
 <template>
-    <div class="img-rounded">
-        <img :src="baseUrl + album.id + '/image'"></img><br>
-        <div class="title-div">
-            <a href="#" v-on:click="setView('album-show', ['setAlbum', album.id])"><b>{{ album.name }}</b></a>
-            <div class="dropdown">
-                <span class="glyphicon glyphicon-option-vertical dropdown-toggle" data-toggle="dropdown"></span>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Play Album</a></li>
-                </ul>
-            </div>
+    <div class="img-rounded" style="overflow: hidden; white-space: nowrap;">
+        <img :src="'/albums/' + album.id + '/image'" onerror="this.src='/img/noalbum.svg'"></img><br>
+        <div class="title-div" style="overflow: hidden; white-space: nowrap; width: 100%; margin-top: .5vw;">
+            <a href="#" v-on:click="setView('album-show', ['setAlbum', album.id])" style="display: block; overflow: hidden; white-space: nowrap; width: 12vw; text-overflow: ellipsis;"><b>{{ album.name }}</b></a>
         </div>
         <a href="#">{{ album.artist.name }}</a>
+        <div class="dropdown">
+            <span class="glyphicon glyphicon-option-vertical dropdown-toggle" data-toggle="dropdown"></span>
+            <ul class="dropdown-menu">
+                <li><a href="#">Play Album</a></li>
+            </ul>
+        </div>
     </div>
 </template>
 
 <style scoped>
     a {
-        color: black;
+        /*color: black;*/
+        color: white;
     }
     img {
         width: 12vw;
         height: 12vw;
     }
     div.img-rounded {
-        background-color: Teal;
-        color: black;
+        /*background-color: Teal;*/
+        /*color: black;*/
         display: inline-block;
         margin: .5vw;
         padding: .5vw;
+        border: 1px solid;
     }
     p {
         margin-bottom: 0px;
@@ -45,9 +47,7 @@
 <script>
     export default {
         data: function() {
-            return {
-                baseUrl: document.location.origin + '/albums/'
-            }
+            return {}
         },
         mounted() {
             console.log("Display holding album " + this.album.id + " loaded.");

@@ -16,8 +16,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr v-for="(track, key) in player.queue" style="line-height: 2vw;" v-on:dblclick="play(track.id)">
-                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track.id)">{{ key }}</td>
+                                    <tr v-for="(track, key) in player.queue" style="line-height: 2vw;" v-on:dblclick="play(track)">
+                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track)">{{ key }}</td>
                                         <td>{{ track.title }}</td>
                                         <td>
                                             <a v-for="artist in track.artists">{{ artist.name }}</a>
@@ -26,7 +26,7 @@
                                             <div class="dropdown">
                                                 <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href="#" v-on:click="play(track.id)">Play</a></li>
+                                                    <li><a href="#" v-on:click="play(track)">Play</a></li>
                                                     <li><a href="#">Queue</a></li>
                                                 </ul>
                                             </div>
@@ -43,7 +43,7 @@
 </template>
 
 <style scoped>
-    tr:hover {
+    tbody > tr:hover {
         background-color: DarkGray;
     }
 </style>

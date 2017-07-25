@@ -30,9 +30,17 @@ export default {
         return data.currentTime / data.duration * 100;
     },
     next: function() {
+        console.log("Now moving to next track...");
         $('#audio')[0].pause();
         this.queue.splice(0, 1);
-        this.playFromQueue();
+        if (!this.queue[0]) {
+            $("#icon").attr("class", "glyphicon glyphicon-play");
+            this.status.resetData();
+            $('#duration').html("-:--/-:--");
+            $('#progressbar > div').width('0%');
+            return;
+        }
+        this.getAudio(this.queue[0].id);
     },
     parseTime: function(time, recur) {
         time = Math.floor(time);
@@ -43,28 +51,19 @@ export default {
         return this.parseTime(time / 60, true) + ":" + timeString;
     },
     play: function(track) {
-        this.queue.splice(0, 0, track);
+        this.queue.splice(0, 1, track);
+        this.status.setStatus(true);
         this.getAudio(track.id);
     },
-    push: tracks => {
+    push: function(tracks) {
         for (let i = 0; i < tracks.length; i++) {
-            queue.push(tracks);
+            this.queue.push(tracks[i]);
         }
-        if (!this.playing) {
-            getAudio(this.queue[0].id);
+        if (!this.status.getStatus()) {
+            this.status.setStatus(true);
+            this.getAudio(this.queue[0].id);
         }
     },
-    playFromQueue: function() {
-        if (!this.queue[0]) {
-            $("#icon").attr("class", "glyphicon glyphicon-play");
-            this.status.resetData();
-            $('#duration').html("-:--/-:--");
-            $('#progressbar > div').width('0%');
-            return;
-        }
-        this.play(this.queue[0].id);
-    },
-    playing: false,
     queue: [],
     status: {
         properties: {
@@ -87,6 +86,7 @@ export default {
             this.properties.data.artists = "-";
             this.properties.data.currentTime = 0;
             this.properties.data.duration = 0;
+            this.properties.playing = false;
         },
         setData(data) {
             this.properties.data.title = data.title;

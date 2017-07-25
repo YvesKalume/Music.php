@@ -22,7 +22,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="track in tracks">
+                            <tr v-for="track in tracks" style="line-height: 2vw;">
                                 <td>{{ track.id }}</td>
                                 <td>{{ track.title }}</td>
                                 <td>{{ parseArtists(track.artists) }}</td>
