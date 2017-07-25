@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">New Album</div>
                 <div class="panel-body" id="formpanel">
-                    <form class="form-horizontal" id="userform" role="form" method="POST">
+                    <form class="form-horizontal" id="userform" role="form" method="POST" v-on:submit="cancel">
                         {{ csrf_field() }}
 
                         <div class="form-group">
@@ -19,8 +19,8 @@
                         </div>
 
                         <text-input name="name" label="Name"></text-input>
-                        <select-input name="artist" label="Artist"></select-input>
-                        <submit-button btn-style="btn-success" label="Create" url="{{ route('albums.store') }}" method="POST"></submit-button>
+                        <select-input name="artist" label="Artist" type="artists"></select-input>
+                        <submit-button btn-style="btn-success" label="Create" url="{{ route('albums.store') }}" method="POST" form="userform" file=""></submit-button>
                     </form>
                 </div>
             </div>
