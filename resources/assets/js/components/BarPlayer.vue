@@ -1,29 +1,30 @@
 <template>
-    <footer class="navbar navbar-default navbar-fixed-bottom" id="barplayer" style="height: 8vh; background-color: #008080; width: 100%;">
-        <audio id="audio" style="visibility: hidden;" ref="player" v-on:ended="playFromQueue" v-on:timeupdate="updateDuration">
+    <footer class="navbar navbar-default navbar-fixed-bottom" id="barplayer">
+        <audio id="audio" style="visibility: hidden;" ref="player" v-on:ended="player.next()" v-on:timeupdate="updateDuration">
             <source id="source" type="audio/mp3"></source>
         </audio>
         <div class="container" id="playercontent" style="height: 100%; width: 100%;">
             <div class="row" style="height: 100%;">
-                <div class="col-md-1" style="height: 100%; display:flex; align-items:center;">
+                <div class="col-md-2" style="height: 100%; display:flex; align-items:center;">
                     <button id="back" style="background:transparent; border:none;" onclick="alert('Back has not yet been implemented')">
-                        <span class="glyphicon glyphicon-step-backward" style="color: black; font-size:2vh;"></span>
+                        <span class="glyphicon glyphicon-step-backward backspan"></span>
                     </button>
                     <button class="toggle" id="play" v-on:click="toggle()" style="margin: 1vh;">
-                        <span id="icon" class="glyphicon glyphicon-play" style="font-size:4vh; color: black;"></span>
+                        <span id="icon" class="glyphicon glyphicon-play"></span>
                     </button>
                     <!-- Typically I would remove the parenthesis for readability,
                     but this would mess up the "this" reference. -->
                     <button id="forward" style="background:transparent; border:none;" v-on:click="player.next()">
-                        <span class="glyphicon glyphicon-step-forward" style="color: black; font-size:2vh;"></span>
+                        <span class="glyphicon glyphicon-step-forward backspan"></span>
                     </button>
                 </div>
-                <div class="col-md-2" style="height: 100%; display: flex; align-items: center;">
-                    <span id="" style="flex-grow: 1; white-space: nowrap; overflow: hidden; vertical-align: middle;">
-                        <p class="trackdata" id="tracktitle" style="font-weight: bold;">{{ player.status.getData().title }}</p>
-                        <p class="trackdata" id="trackartist">{{ player.status.getData().artists }}</p>
-                    </span>
-                    <span id="duration" style="color: black; margin-left: 1vw;">{{ duration }}</span>
+                <div class="col-md-1" style="height: 100%; display: flex; align-items: center;">
+                    <!-- <span id="spancontent" style="flex-grow: 1; white-space: nowrap; overflow: hidden; vertical-align: middle;"
+                        v-on:mouseenter="startScroll" v-on:mouseleave="endScroll">
+                        <p class="trackdata" style="font-weight: bold;">{{ player.status.getData().title }}</p>
+                        <p class="trackdata">{{ player.status.getData().artists }}</p>
+                    </span> -->
+                    <span id="duration">{{ duration }}</span>
                 </div>
                 <div class="col-md-9 vertical-center">
                     <div class="bar" id="progressbar" style="width: 100%;" v-on:click="setProgress">
@@ -40,6 +41,20 @@
 </template>
 
 <style scoped>
+
+    #icon {
+        font-size:4vh;
+        /*color: black;*/
+    }
+    .backspan {
+        /*color: black; */
+        font-size:2vh;
+    }
+
+    #duration {
+        /*color: black;*/
+        margin-left: 1vw;
+    }
     .toggle {
         height: 75%;
         line-height: 87.5%;
@@ -47,18 +62,18 @@
         display: flex;
         justify-content: center;
         background: transparent;
-        border-radius: 100%;
-        border-color: black;
+        border: none;
+        /*border-radius: 100%;*/
+        /*border-color: black;*/
         align-items: center;
     }
 
     .trackdata {
         margin: 0;
-        color: black;
-
+        /*color: black;*/
     }
 
-    .trackdata:hover {
+    .scroll {
         /* Starting position */
         -moz-transform:translateX(100%);
         -webkit-transform:translateX(100%);
@@ -95,11 +110,13 @@
         background: gray;
         border-radius: 1vw;
         height: 1vh;
-        border: 2px solid black;
+        /*border: 2px solid black;*/
+        border: 2px solid;
     }
 
     .bar > div {
-        background: #008080;
+        /*background: #008080;*/
+        background: #2a9fd6;
         height: 100%;
         border-radius: 1vw;
     }
@@ -110,8 +127,14 @@
         align-items: center;
     }
 
+    #barplayer {
+        height: 8vh;
+        /*background-color: #008080;*/
+        width: 100%;
+    }
+
     #volicon {
-        color: black;
+        /*color: black;*/
         margin-left: 2vw;
         margin-right: .5vw;
         font-size: 2vh;
@@ -132,6 +155,10 @@
             }
         },
         methods: {
+            endScroll: e => {
+                console.log("Ending text scrolling...");
+                $(e.target).children().removeClass("scroll");
+            },
             getVolumeStatus: function() {
                 if (this.muted) {
                     return "glyphicon-volume-off";
@@ -167,6 +194,10 @@
                 audio.volume = volume;
                 this.volume = volume;
             },
+            startScroll: function(e) {
+                console.log("Triggering text scrolling...");
+                $(e.target).children().addClass("scroll");
+            },
             updateDuration: function(e) {
                 /**
                  * Checks if there is no duration to cancel the function and prevent overflow errors.
@@ -182,7 +213,7 @@
             }
         },
         mounted() {
-            console.log('Component mounted.')
+            console.log('BarPlayer mounted.')
         }
     };
 </script>

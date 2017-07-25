@@ -1,16 +1,18 @@
 <template>
-    <div class="list-group">
-        <a class="list-group-item" href="#" v-on:click="setView('home')" :class="getView() === 'home' ? 'active' : ''">Home</a>
-        <a class="list-group-item" href="#" v-on:click="setView('queue')" :class="getView() === 'queue' ? 'active' : ''">Queue</a>
-        <li class="dropdown-header">Media</li>
-        <a class="list-group-item" href="#" v-on:click="setView('album-index')" :class="getView() === 'album-index' ? 'active' : ''">Albums</a>
-        <a class="list-group-item" href="#" v-on:click="setView('track-index')" :class="getView() === 'track-index' ? 'active' : ''">Tracks</a>
-    </div>
+    <ul class="nav nav-pills nav-stacked" style="overflow-y: scroll;">
+        <li :class="getView() === 'home' ? 'active' : ''"><a href="#" v-on:click="setView('home')">Home</a></li>
+        <li :class="getView() === 'queue' ? 'active' : ''"><a href="#" v-on:click="setView('queue')">Queue</a></li>
+        <li class="dropdown-header" style="padding-left: .5vw;"><b>Media</b></li>
+        <li class="divider"></li>
+        <li :class="getView() === 'album-index' ? 'active' : ''"><a href="#" v-on:click="setView('album-index')">Albums</a></li>
+        <li :class="getView() === 'track-index' ? 'active' : ''"><a href="#" v-on:click="setView('track-index')">Tracks</a></li>
+    </ul>
 </template>
 
 <style scoped>
-    div {
-        margin: 0;
+    ul {
+        border-right: 1px solid;
+        height: 100%;
     }
 </style>
 

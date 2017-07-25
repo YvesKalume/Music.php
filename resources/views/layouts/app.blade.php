@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ config('app.locale') }}" style="">
+<html lang="{{ config('app.locale') }}" style="height: 100%;">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +11,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
+    <link href="{{ asset('css/bootstrap-cyborg.min.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -21,9 +22,9 @@
     </script>
     @yield('styles')
 </head>
-<body style="padding-bottom: 8vh;">
-    <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
+<body style="height: 100%;" data-target=".scrollspy">
+    <div id="app" style="position: relative; height: 100%;" class="scrollspy">
+        <nav class="navbar navbar-default navbar-static-top navbar-fixed-top" style="height: 6vh;">
             <div class="container">
                 <div class="navbar-header">
 
