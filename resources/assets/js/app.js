@@ -24,6 +24,8 @@ Vue.component('column', require('./components/Column.vue'));
 Vue.component('home', require('./components/Home.vue'));
 Vue.component('queue', require('./components/Queue.vue'));
 Vue.component('track-index', require('./components/track/Index.vue'));
+Vue.component('track-info', require('./components/player/TrackInfo.vue'));
+Vue.component('track-span', require('./components/player/TrackSpan.vue'));
 Vue.component('track-upload', require('./components/TrackUploadPanel.vue'));
 
 Vue.component(
@@ -66,6 +68,10 @@ const store = new Vuex.Store({
 
 Vue.mixin({
     methods: {
+        cancel: function(e) {
+            console.log("Cancelling default submit behavior");
+            e.preventDefault();
+        },
         checkAdmin: function() {
             return this.$store.state.admin;
         },
