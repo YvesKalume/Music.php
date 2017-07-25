@@ -39,13 +39,21 @@ class Install extends Command
     {
         $this->info('Beginning app installation process...');
 
-        $this->info('Copying .env file...');
-        $process = new \Symfony\Component\Process\Process('cp --no-clobber /srv/www/.env.example /srv/env/.env');
-        $process->run();
+
+        /**
+         * This used to copy the .env file, but that would run into issues,
+         * since the instance that is running this install script doesn't have
+         * access to the new .env file quite yet.
+         */
 
         $this->call('key:generate');
 
-        $this->call('migrate:refresh --seed');
+        /**
+         * Don't use "migrate:refresh --seed" here, that command does not work
+         * when called in this manner.
+         */
+        $this->call('migrate');
+        $this->call('db:seed');
 
         $path = $this->laravel->environmentFilePath();
         $this->call('passport:install');
