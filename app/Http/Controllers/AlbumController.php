@@ -7,6 +7,7 @@ use App\Artist;
 use App\Track;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class AlbumController extends Controller
@@ -100,6 +101,16 @@ class AlbumController extends Controller
      */
     public function update(Request $request, Album $album)
     {
+        if ($request->hasFile('file')) {
+            Log::info('File detected. Updating album artwork...');
+            if (Storage::disk('local')->exists($album->path)) {
+                Log::info('Old file detected. Deleting old artwork...');
+                Storage::delete($album->path);
+            }
+            $path = $request->file->store('albums');
+            $album->path = $path;
+        }
+        Log::info('Updating artist information...');
         $album->name = $request->name;
         $album->artist_id = $request->artist;
         $album->save();
@@ -128,12 +139,18 @@ class AlbumController extends Controller
      */
     public function image(Album $album)
     {
-        $size = Storage::size($album->path);
-        return response(Storage::get($album->path))->withHeaders([
-            'Content-Disposition' => 'filename=image.jpeg',
-            'Content-Length' => $size,
-            'Content-Type' => 'image/jpeg'
-        ]);
+        if (Storage::disk('local')->exists($album->path))
+        {
+            $size = Storage::size($album->path);
+            return response(Storage::get($album->path))->withHeaders([
+                'Content-Disposition' => 'filename=image.jpeg',
+                'Content-Length' => $size,
+                'Content-Type' => 'image/jpeg'
+            ]);
+        } else
+        {
+            return response('File Not Found', 404);
+        }
     }
 
     public function getTracks(Album $album)
