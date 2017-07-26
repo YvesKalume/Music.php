@@ -39,7 +39,6 @@
 
 @section('scripts')
 <script type="text/javascript" src="{{ asset('js/datatables.min.js') }}"></script>
-<script src="{{asset('js/jquery.marquee.js')}}" type="text/javascript"></script>
 <script>
     // AJAX client instantiation.
     // $(document).ready(() => {
