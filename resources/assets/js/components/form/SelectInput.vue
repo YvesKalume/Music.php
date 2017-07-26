@@ -4,8 +4,9 @@
 
         <div class="col-md-6">
             <select class="artists form-control" :id="name" :name="name" style="width: 100%" :multiple="multiple" required>
-                <option selected disabled value="select" v-if="!multiple">Select...</option>
-                <option v-for="item in array" v-on:mousedown="toggle" :value="item.id">{{ item.name }}</option>
+                <option selected disabled value="select" v-if="!multiple && values.length === 0">Select...</option>
+                <option v-for="item in array" v-on:mousedown="toggle" :value="item.id" selected v-if="inValues(item.id)">{{ item.name }}</option>
+                <option v-for="item in array" v-on:mousedown="toggle" :value="item.id" v-if="!inValues(item.id)">{{ item.name }}</option>
                 <option id="addartist" value="addartist" v-on:click="addItem">+ Add {{ type.charAt(0).toUpperCase() + type.slice(1) }}</option>
             </select>
         </div>
@@ -16,7 +17,8 @@
     export default {
         data: () => {
             return {
-                array: null
+                array: null,
+                values: []
             }
         },
         methods: {
@@ -52,6 +54,10 @@
                     }
                 });
             },
+            inValues: function (id) {
+                console.log("Value " + id + " returns " + (this.values.indexOf(id) !== -1) + " for inValues");
+                return this.values.indexOf(id) !== -1;
+            },
             toggle: function(e) {
                 if (!this.multiple) return;
                 e.preventDefault();
@@ -69,6 +75,17 @@
                 }
             });
 
+            if (this.value) {
+                let json = JSON.parse(this.value);
+                if (Array.isArray(json)) {
+                    for (let i = 0; i < json.length; i++) {
+                        this.values.push(json[i].id);
+                    }
+                } else {
+                    this.values = [json.id];
+                }
+            }
+
             console.log("SelectInput mounted successfully");
         },
         /**
@@ -77,7 +94,8 @@
          * @param {boolean} multiple - Whether or not this input can select multiple values.
          * @param {string} name - The name of the input that the server will receive. Required.
          * @param {string} type - The model type that this select input has access to.
+         * @param {string|string[]} value - The default value or values for this select input.
          */
-        props: ["name", "label", "multiple", "type"]
+        props: ["name", "label", "multiple", "type", "value"]
     }
 </script>
