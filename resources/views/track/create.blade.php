@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.form')
 <script src="{{ asset('js/jsmediatags.min.js') }}"></script>
 
 @section('content')
