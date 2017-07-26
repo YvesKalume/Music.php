@@ -7,6 +7,12 @@
 
 require('./bootstrap');
 
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -16,6 +22,7 @@ require('./bootstrap');
 Vue.use(Vuex);
 
 Vue.component('album-display', require('./components/album/Display.vue'));
+Vue.component('album-dropdown', require('./components/album/Dropdown.vue'));
 Vue.component('album-index', require('./components/album/Index.vue'));
 Vue.component('album-show', require('./components/album/Show.vue'));
 Vue.component('file-handler', require('./components/FileHandler.vue'));
@@ -43,6 +50,7 @@ Vue.component(
     require('./components/passport/PersonalAccessTokens.vue')
 );
 
+Vue.component('file-input', require('./components/form/FileInput.vue'));
 Vue.component('text-input', require('./components/form/TextInput.vue'));
 Vue.component('password-input', require('./components/form/PasswordInput.vue'));
 Vue.component('select-input', require('./components/form/SelectInput.vue'));
@@ -71,6 +79,27 @@ Vue.mixin({
         cancel: function(e) {
             console.log("Cancelling default submit behavior");
             e.preventDefault();
+        },
+        deleteResource: function(resource, id) {
+            if (!confirm("Are you sure you want to delete this? It will be gone forever!")) return;
+            let formData = new FormData();
+            formData.append('_method', 'DELETE');
+            $.ajax({
+                data: formData,
+                contentType: false,
+                processData: false,
+                url: document.location.origin + "/" + resource + "/" + id,
+                error: (e) => {
+                    console.log(e.responseText);
+                    alert("Error on deleting item...");
+                },
+                method: 'POST',
+                success: (data) => {
+                    if(data.status === "OK") {
+                        alert("Item deleted successfully!");
+                    }
+                }
+            });
         },
         checkAdmin: function() {
             return this.$store.state.admin;
