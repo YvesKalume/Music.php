@@ -100,7 +100,11 @@ export default {
             this.properties.playing = status;
         }
     },
-    toggle: () => {
+    toggle: function() {
+        if (!this.status.getStatus()) {
+            console.log("Player is not active. Ignoring play request...");
+            return;
+        }
         if ($('#audio')[0].paused) {
             $("#icon").attr("class", "glyphicon glyphicon-pause");
             return $('#audio')[0].play();

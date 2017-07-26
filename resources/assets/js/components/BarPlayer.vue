@@ -9,7 +9,7 @@
                     <button id="back" style="background:transparent; border:none;" onclick="alert('Back has not yet been implemented')">
                         <span class="glyphicon glyphicon-step-backward backspan"></span>
                     </button>
-                    <button class="toggle" id="play" v-on:click="toggle()" style="margin: 1vh;">
+                    <button class="toggle" id="play" v-on:click="player.toggle()" style="margin: 1vh;">
                         <span id="icon" class="glyphicon glyphicon-play"></span>
                     </button>
                     <!-- Typically I would remove the parenthesis for readability,
@@ -181,9 +181,6 @@
             playFromQueue: () => {
                 player.queue.splice(0, 1);
                 player.playFromQueue();
-            },
-            toggle: () => {
-                player.toggle();
             },
             setProgress: e => {
                 if (audio.paused) return;
