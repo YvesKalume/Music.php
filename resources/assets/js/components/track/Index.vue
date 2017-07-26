@@ -32,7 +32,7 @@
                                         <ul class="dropdown-menu">
                                             <li><a href="#" v-on:click="player.play(track)">Play</a></li>
                                             <li><a href="#">Queue</a></li>
-                                            <li v-if="checkAdmin()"><a href="#">Edit</a></li>
+                                            <li v-if="checkAdmin()"><a :href="edit(track.id)" target="_blank">Edit</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -57,6 +57,9 @@
             }
         },
         methods: {
+            edit: id => {
+                return "/tracks/" + id + "/edit"
+            },
             parseArtists: (artists) => {
                 let artistString = "";
                 for (let i = 0; i < artists.length; i++) {
