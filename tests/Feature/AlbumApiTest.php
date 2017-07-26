@@ -24,32 +24,32 @@ class AlbumApiTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // public function testCreateUnauthenticated()
-    // {
-    //     $response = $this->json('GET', '/api/albums/create');
-    //     $response->assertStatus(401);
-    // }
-    //
-    // public function testCreateAuthenticated()
-    // {
-    //     Passport::actingAs(User::find(1), ['*']);
-    //
-    //     $response = $this->json('GET', '/api/albums/create');
-    //     $response->assertStatus(200);
-    // }
-
-    public function testStoreUnauthenticated()
+    public function testCreateUnauthenticated()
     {
-        $response = $this->json('GET', '/api/albums');
+        $response = $this->json('GET', '/api/albums/create');
         $response->assertStatus(401);
     }
 
-    public function testStoreAuthenticated()
+    public function testCreateAuthenticated()
     {
         Passport::actingAs(User::find(1), ['*']);
-        $response = $this->json('GET', '/api/albums');
-        $response->assertStatus(200);
+
+        $response = $this->json('GET', '/api/albums/create');
+        $response->assertStatus(404);
     }
+
+    // public function testStoreUnauthenticated()
+    // {
+    //     $response = $this->json('GET', '/api/albums');
+    //     $response->assertStatus(401);
+    // }
+    //
+    // public function testStoreAuthenticated()
+    // {
+    //     Passport::actingAs(User::find(1), ['*']);
+    //     $response = $this->json('GET', '/api/albums');
+    //     $response->assertStatus(200);
+    // }
 
     public function testShowUnauthenticated()
     {
@@ -64,43 +64,43 @@ class AlbumApiTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // public function testEditUnauthenticated()
+    public function testEditUnauthenticated()
+    {
+        $response = $this->json('GET', '/api/albums/1/edit');
+        $response->assertStatus(404);
+    }
+
+    public function testEditAuthenticated()
+    {
+        Passport::actingAs(User::find(1), ['*']);
+        $response = $this->json('GET', '/api/albums/1/edit');
+        $response->assertStatus(404);
+    }
+
+    // public function testUpdateUnauthenticated()
     // {
-    //     $response = $this->json('GET', '/api/albums/1/edit');
+    //     $response = $this->json('GET', '/api/albums/1');
     //     $response->assertStatus(401);
     // }
     //
-    // public function testEditAuthenticated()
+    // public function testUpdateAuthenticated()
     // {
     //     Passport::actingAs(User::find(1), ['*']);
-    //     $response = $this->json('GET', '/api/albums/1/edit');
+    //     $response = $this->json('GET', '/api/albums/1');
     //     $response->assertStatus(200);
     // }
-
-    public function testUpdateUnauthenticated()
-    {
-        $response = $this->json('GET', '/api/albums/1');
-        $response->assertStatus(401);
-    }
-
-    public function testUpdateAuthenticated()
-    {
-        Passport::actingAs(User::find(1), ['*']);
-        $response = $this->json('GET', '/api/albums/1');
-        $response->assertStatus(200);
-    }
-
-    public function testDeleteUnauthenticated()
-    {
-        $response = $this->json('GET', '/api/albums/1');
-        $response->assertStatus(401);
-    }
-
-    public function testDeleteAuthenticated()
-    {
-        Passport::actingAs(User::find(1), ['*']);
-        $response = $this->json('GET', '/api/albums/1');
-        $response->assertStatus(200);
-    }
+    //
+    // public function testDeleteUnauthenticated()
+    // {
+    //     $response = $this->json('GET', '/api/albums/1');
+    //     $response->assertStatus(401);
+    // }
+    //
+    // public function testDeleteAuthenticated()
+    // {
+    //     Passport::actingAs(User::find(1), ['*']);
+    //     $response = $this->json('GET', '/api/albums/1');
+    //     $response->assertStatus(200);
+    // }
 
 }
