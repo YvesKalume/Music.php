@@ -10,31 +10,38 @@
     export default {
         methods: {
             submit: function() {
-                var formData = new FormData($("#" + this.form)[0]);
-                console.log("Running submit function...");
-                formData.append('_method', this.method);
+                $("#" + this.form).validate({
+                    invalidHandler: function(event, validator) {
+                        var errors = validator.numberOfInvalids();
+                        if (errors) {
+                            console.log(`${errors} errors detected. Halting form until resolved.`);
+                        }
+                    },
+                    submitHandler: form => {
+                        var formData = new FormData(form);
+                        console.log("Running submit function...");
+                        formData.append('_method', this.method);
 
-                if (this.file) {
-                    formData.append("file", this.file, "file");
-                } else if ($('input[type=file]').length > 0) {
-                    console.log("File input detected. Appending file input to form data...")
-                    formData.append("file", $('input[type=file]')[0].files[0], "file");
-                }
-                $.ajax({
-                    url: this.url,
-                    data: formData,
-                    error: err => {
-                        console.error('Error submitting form...');
-                        console.log(err.responseText);
-                    },
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    method: 'POST',
-                    contentType: false,
-                    processData: false,
-                    success: (data) => {
-                        $("#" + this.form).parent().html("Submitted!");
+                        if (this.file) {
+                            formData.append("file", this.file, "file");
+                        } else if ($('input[type=file]').length > 0 && $('input[type=file]')[0].files.length > 0) {
+                            console.log("File input detected. Appending file input to form data...")
+                            formData.append("file", $('input[type=file]')[0].files[0], "file");
+                        }
+                        $.ajax({
+                            url: this.url,
+                            data: formData,
+                            error: err => {
+                                console.error('Error submitting form...');
+                                console.log(err.responseText);
+                            },
+                            method: 'POST',
+                            contentType: false,
+                            processData: false,
+                            success: (data) => {
+                                $(form).parent().html("Submitted!");
+                            }
+                        });
                     }
                 });
             }
