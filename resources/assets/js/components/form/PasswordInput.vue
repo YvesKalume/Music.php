@@ -3,7 +3,7 @@
         <label :for="name" class="col-md-4 control-label">{{ label }}</label>
 
         <div class="col-md-6">
-            <input :id="name" type="password" class="form-control" :name="name" :placeholder="hint" required autofocus>
+            <input :id="name" type="password" class="form-control" :name="name" :placeholder="hint" autofocus>
         </div>
     </div>
 </template>
