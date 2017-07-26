@@ -126,7 +126,10 @@ class AlbumController extends Controller
      */
     public function destroy(Album $album)
     {
-        //
+        Storage::delete($album->path);
+        $album->tracks()->detach();
+        $album->delete();
+        return ['status' => 'OK'];
     }
 
     // Additional functions.
@@ -149,7 +152,7 @@ class AlbumController extends Controller
             ]);
         } else
         {
-            return response('File Not Found', 404);
+            return redirect('/img/noalbum.svg');
         }
     }
 

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.form')
 
 @section('content')
 <div class="container" id="container">
@@ -10,13 +10,7 @@
                     <form class="form-horizontal" id="userform" role="form" method="POST" v-on:submit="cancel">
                         {{ csrf_field() }}
 
-                        <div class="form-group">
-                            <label for="image" class="col-md-4 control-label">Image</label>
-
-                            <div class="col-md-6">
-                                <input id="file" type="file"></input>
-                            </div>
-                        </div>
+                        <file-input label="Image" name="file"></file-input>
 
                         <text-input name="name" label="Name"></text-input>
                         <select-input name="artist" label="Artist" type="artists"></select-input>

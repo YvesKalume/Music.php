@@ -1,15 +1,13 @@
 <template>
-    <div class="img-rounded" style="overflow: hidden; white-space: nowrap;">
-        <img :src="'/albums/' + album.id + '/image'" onerror="this.src='/img/noalbum.svg'"></img><br>
+    <div class="img-rounded">
+        <img :src="'/albums/' + album.id + '/image'"></img><br>
         <div class="title-div" style="overflow: hidden; white-space: nowrap; width: 100%; margin-top: .5vw;">
             <a href="#" v-on:click="setView('album-show', ['setAlbum', album.id])" style="display: block; overflow: hidden; white-space: nowrap; width: 12vw; text-overflow: ellipsis;"><b>{{ album.name }}</b></a>
         </div>
         <a href="#">{{ album.artist.name }}</a>
         <div class="dropdown">
             <span class="glyphicon glyphicon-option-vertical dropdown-toggle" data-toggle="dropdown"></span>
-            <ul class="dropdown-menu">
-                <li><a href="#">Play Album</a></li>
-            </ul>
+            <album-dropdown :album="album"></album-dropdown>
         </div>
     </div>
 </template>

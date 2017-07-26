@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.form')
 
 @section('content')
 <div class="container" id="container" style="margin-top: 8vh;">
@@ -19,9 +19,9 @@
                         </div>
 
                         <text-input label="name" name="name" value="{{$album->name}}"></text-input>
-                        <select-input label="Artist" name="artist" type="artists"></select-input>
+                        <select-input label="Artist" name="artist" type="artists" value="{{$album->artist}}"></select-input>
 
-                        <submit-button btnStyle="btn-success" form="updateform" label="Update" method="PUT" url="/albums/1"></submit-button>
+                        <submit-button btn-style="btn-success" form="updateform" label="Update" method="PUT" url="/albums/1"></submit-button>
                     </form>
                 </div>
             </div>
