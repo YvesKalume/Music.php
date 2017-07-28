@@ -1,8 +1,5 @@
 <template>
     <footer class="navbar navbar-default navbar-fixed-bottom" id="barplayer">
-        <audio id="audio" style="visibility: hidden;" ref="player" v-on:ended="player.next()" v-on:timeupdate="updateDuration">
-            <source id="source" type="audio/mp3"></source>
-        </audio>
         <div class="container" id="playercontent" style="height: 100%; width: 100%;">
             <div class="row" style="height: 100%;">
                 <div class="col-md-2" style="height: 100%; display:flex; align-items:center;">
@@ -10,7 +7,7 @@
                         <span class="glyphicon glyphicon-step-backward backspan"></span>
                     </button>
                     <button class="toggle" id="play" v-on:click="player.toggle()" style="margin: 1vh;">
-                        <span id="icon" class="glyphicon glyphicon-play"></span>
+                        <span id="icon" class="glyphicon" :class="player.getIcon()"></span>
                     </button>
                     <!-- Typically I would remove the parenthesis for readability,
                     but this would mess up the "this" reference. -->
@@ -24,15 +21,15 @@
                         <p class="trackdata" style="font-weight: bold;">{{ player.status.getData().title }}</p>
                         <p class="trackdata">{{ player.status.getData().artists }}</p>
                     </span> -->
-                    <span id="duration">{{ duration }}</span>
+                    <span id="duration">{{ player.status.getData().durationString }}</span>
                 </div>
                 <div class="col-md-9 vertical-center">
                     <div class="bar" id="progressbar" style="width: 100%;" v-on:click="setProgress">
-                        <div class="barvalue" id="progress" v-bind:style="{ width: percent + '%' }"></div>
+                        <div class="barvalue" id="progress" v-bind:style="{ width: player.status.getData().percent + '%' }"></div>
                     </div>
                     <span class="glyphicon" id="volicon" :class="getVolumeStatus()" v-on:click="mute()"></span>
                     <div class="bar" id="volumebar" style="width: 10%;" v-on:click="setVolume">
-                        <div class="barvalue" id="volume" v-bind:style="{ width: volume * 100 + '%' }"></div>
+                        <div class="barvalue" id="volume" v-bind:style="{ width: player.volume.get() * 100 + '%' }"></div>
                     </div>
                 </div>
             </div>
@@ -162,7 +159,7 @@
             getVolumeStatus: function() {
                 if (this.muted) {
                     return "glyphicon-volume-off";
-                } else if (this.volume < 0.5) {
+                } else if (player.volume.get() < 0.5) {
                     return "glyphicon-volume-down";
                 } else {
                     return "glyphicon-volume-up";
@@ -170,11 +167,11 @@
             },
             mute: function() {
                 // But why isn't this binded?! Well, HTML's muted attribute is only initial and is not a constant bind. :/
-                if ($('#audio')[0].muted) {
-                    $('#audio')[0].muted = false;
+                if (player.audio.muted) {
+                    player.audio.muted = false;
                     this.muted = false;
                 } else {
-                    $('#audio')[0].muted = true;
+                    player.audio.muted = true;
                     this.muted = true;
                 }
             },
@@ -183,30 +180,18 @@
                 player.playFromQueue();
             },
             setProgress: e => {
-                if (audio.paused) return;
-                $('#audio')[0].currentTime = $('#audio')[0].duration * e.offsetX / $('#progressbar')[0].offsetWidth;
+                if (player.audio.paused) return;
+                player.audio.currentTime = player.audio.duration * e.offsetX / e.target.offsetWidth;
             },
             setVolume: function(e) {
-                let volume = e.offsetX / $('#volumebar')[0].offsetWidth;
-                audio.volume = volume;
-                this.volume = volume;
+                let volume = e.offsetX / e.target.offsetWidth;
+                // player.audio.volume = volume;
+                // this.volume = volume;
+                player.volume.set(volume);
             },
             startScroll: function(e) {
                 console.log("Triggering text scrolling...");
                 $(e.target).children().addClass("scroll");
-            },
-            updateDuration: function(e) {
-                /**
-                 * Checks if there is no duration to cancel the function and prevent overflow errors.
-                 */
-                if (!e.target.duration) {
-                    return;
-                }
-
-                let durationString = player.parseTime(e.target.duration);
-                let progress = player.parseTime(e.target.currentTime);
-                this.duration = progress + "/" + durationString;
-                this.percent = e.target.currentTime / e.target.duration * 100;
             }
         },
         mounted() {

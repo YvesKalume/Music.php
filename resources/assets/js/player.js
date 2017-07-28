@@ -9,21 +9,33 @@ export default {
             this.playFromQueue();
         }
     },
+    audio: null,
     getAudio: function(id) {
         $.get({
             url: document.location.origin + "/tracks/" + id,
             success: data => {
-                $('#source').attr('src', document.location.origin + "/tracks/" + id + "/audio");
+                // $('#source').attr('src', document.location.origin + "/tracks/" + id + "/audio");
                 let artists = "";
                 $.each(data.artists, index => {
                     artists += `${data.artists[index].name} `;
                 });
                 this.status.setData(data);
                 $("#icon").attr("class", "glyphicon glyphicon-pause");
-                $('#audio')[0].load();
-                $('#audio')[0].play();
+                this.audio = new Audio('/tracks/' + id + '/audio');
+                this.audio.addEventListener('timeupdate', event => this.status.setDuration(event));
+                this.audio.addEventListener('ended', () => this.next());
+                this.audio.volume = this.volume.get();
+                this.audio.play();
+                // $('#audio')[0].load();
+                // $('#audio')[0].play();
             }
         });
+    },
+    getIcon: function() {
+        if (!this.status.getStatus() || this.audio.paused) {
+            return "glyphicon-play";
+        }
+        return "glyphicon-pause";
     },
     getPercent: function() {
         let data = this.status.getData();
@@ -31,13 +43,14 @@ export default {
     },
     next: function() {
         console.log("Now moving to next track...");
-        $('#audio')[0].pause();
+        this.audio.pause();
+        // delete(this.audio);
+        this.audio = null;
         this.queue.splice(0, 1);
         if (!this.queue[0]) {
             $("#icon").attr("class", "glyphicon glyphicon-play");
             this.status.resetData();
-            $('#duration').html("-:--/-:--");
-            $('#progressbar > div').width('0%');
+            console.log(this.status.getData().durationString);
             return;
         }
         this.getAudio(this.queue[0].id);
@@ -51,6 +64,11 @@ export default {
         return this.parseTime(time / 60, true) + ":" + timeString;
     },
     play: function(track) {
+        if (this.audio) {
+            this.audio.pause();
+            // delete(this.audio);
+            this.audio = null;
+        }
         this.queue.splice(0, 1, track);
         this.status.setStatus(true);
         this.getAudio(track.id);
@@ -71,21 +89,34 @@ export default {
                 artists: "-",
                 currentTime: 0,
                 duration: 0,
+                durationString: "-:--/-:--",
+                percent: 0,
                 title: "No track playing"
             },
+            change: false,
             playing: false
         },
         getData() {
             return this.properties.data;
         },
+        getDurationString() {
+            return this.properties.data.durationString;
+        },
+        setDurationString: () => {
+            this.a.status.properties.data.durationString = this.a.parseTime(this.a.status.getData().currentTime) + "/" + this.a.parseTime(this.a.status.getData().duration);
+        },
         getStatus() {
             return this.properties.playing;
         },
         resetData() {
-            this.properties.data.title = "No track playing";
-            this.properties.data.artists = "-";
-            this.properties.data.currentTime = 0;
-            this.properties.data.duration = 0;
+            this.properties.data = {
+                artists: "-",
+                currentTime: 0,
+                duration: 0,
+                durationString: "-:--/-:--",
+                percent: 0,
+                title: "No track playing"
+            };
             this.properties.playing = false;
         },
         setData(data) {
@@ -96,6 +127,19 @@ export default {
             });
             this.properties.data.artists = artists;
         },
+        setDuration: function(event) {
+            /**
+             * This makes sure that the player is actually running before setting
+             * status. This is important, because otherwise the player will set a
+             * random time string even though nothing is playing.
+             */
+            if (!this.getStatus()) return;
+
+            this.properties.data.currentTime = event.target.currentTime;
+            this.properties.data.duration = event.target.duration;
+            this.properties.data.percent = event.target.currentTime / event.target.duration * 100;
+            this.setDurationString();
+        },
         setStatus(status) {
             this.properties.playing = status;
         }
@@ -105,11 +149,21 @@ export default {
             console.log("Player is not active. Ignoring play request...");
             return;
         }
-        if ($('#audio')[0].paused) {
-            $("#icon").attr("class", "glyphicon glyphicon-pause");
-            return $('#audio')[0].play();
+        if (this.audio.paused) {
+            return this.audio.play();
         }
-        $("#icon").attr("class", "glyphicon glyphicon-play");
-        $('#audio')[0].pause();
+        this.audio.pause();
+    },
+    volume: {
+        value: 1,
+        get: function() {
+            return this.value;
+        },
+        set: value => {
+            if (this.a.audio) {
+                this.a.audio.volume = value;
+            }
+            this.a.volume.value = value;
+        }
     }
 };
