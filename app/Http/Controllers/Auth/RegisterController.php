@@ -68,4 +68,22 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    /**
+     * Uses settings policy to enable and disable registration.
+     *
+     * @return void
+     */
+    public function showRegistrationForm()
+    {
+        echo('Registration has been disabled on this site.');
+    }
+
+    /**
+     * Registers a user, first checking that policy allows for user registration.
+     */
+    public function register()
+    {
+        echo('Registration has been disabled on this site.');
+    }
 }
