@@ -24,6 +24,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/oauth/grant/password', 'PasswordGrantController');
 
 Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('/albums/{album}/image', 'AlbumController@image');
     Route::get('/tracks/{track}/audio', 'TrackController@audio');
     Route::resource('albums', 'AlbumController', ['except' => [
         'create', 'edit'
