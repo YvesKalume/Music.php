@@ -21,11 +21,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
  * This is an authentication endpoint for first party clients that are also a
  * part of the Music.php project and can use password grant API authentication.
  */
-Route::post('/oauth/grant/password', 'PasswordGrantController');
+Route::post('/oauth/grant/password', 'PasswordGrantController@login');
+Route::post('/oauth/grant/refresh', 'PasswordGrantController@refresh');
 
 Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/albums/{album}/image', 'AlbumController@image');
     Route::get('/tracks/{track}/audio', 'TrackController@audio');
+    Route::post('/logout', 'PasswordGrantController@logout');
     Route::resource('albums', 'AlbumController', ['except' => [
         'create', 'edit'
     ]]);
