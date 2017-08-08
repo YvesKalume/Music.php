@@ -12,20 +12,20 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Tracks</div>
                 <div class="panel-body">
-                    <table id="table" style="width: 100%">
+                    <table id="table" style="width: 100%; table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Title</th>
-                                <th>Artists</th>
-                                <th>More</th>
+                                <th style="width: 5%;">ID</th>
+                                <th style="width: 50%;">Title</th>
+                                <th style="width: 40%;">Artists</th>
+                                <th style="width: 5%;">More</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="track in tracks" style="line-height: 2vw;">
                                 <td>{{ track.id }}</td>
-                                <td>{{ track.title }}</td>
-                                <td>{{ parseArtists(track.artists) }}</td>
+                                <td class="ellipsis">{{ track.title }}</td>
+                                <td class="ellipsis" style="width: 100%;">{{ parseArtists(track.artists) }}</td>
                                 <td>
                                     <div class="dropdown">
                                         <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>

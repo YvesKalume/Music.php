@@ -19,36 +19,37 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Tracks</div>
                     <div class="panel-body">
-                        <table id="table" style="width: 100%;">
+                        <table id="table" style="width: 100%; table-layout: fixed;">
                             <thead>
                                 <tr>
-                                    <th style="text-align: center;">#</th>
-                                    <th>Title</th>
-                                    <th>Artists</th>
-                                    <th>More</th>
-                                    <th v-if="checkAdmin()">Edit</th>
+                                    <th style="text-align: center; width: 5%;">#</th>
+                                    <th style="width: 50%;">Title</th>
+                                    <th style="width: 40%;">Artists</th>
+                                    <th style="width: 5%;">More</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr v-for="track in album.tracks" style="line-height: 2vw;" v-on:dblclick="play(track)">
-                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track)">
+                                    <tr v-for="track in album.tracks" style="line-height: 2vw; width: 100%;" v-on:dblclick="play(track)">
+                                        <td style="cursor: pointer; text-align: center; max-width: 10%;" v-on:click="play(track)">
                                             <span></span>
                                             <span>{{ track.id }}</span>
                                         </td>
-                                        <td>{{ track.title }}</td>
-                                        <td>
-                                            <a v-for="artist in track.artists">{{ artist.name }}</a>
+                                        <td class="ellipsis">{{ track.title }}</td>
+                                        <td style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: inline-block; width: 100%;">
+                                            <a v-for="(artist, key) in track.artists" href="#">
+                                                {{ artist.name }}<span v-if="key < track.artists.length - 1">, </span>
+                                            </a>
                                         </td>
                                         <td>
                                             <div class="dropdown">
                                                 <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
                                                 <ul class="dropdown-menu">
                                                     <li><a href="#" v-on:click="play(track)">Play</a></li>
+                                                    <li><a :href="'/tracks/' + track.id + '/edit'" target="_blank">Edit</a></li>
                                                     <li><a href="#" v-on:click="push([track])">Queue</a></li>
                                                 </ul>
                                             </div>
                                         </td>
-                                        <td v-if="checkAdmin()"><a class="btn btn-primary" :href='"/tracks/" + track.id + "/edit"' target="_blank">Edit</a></td>
                                     </tr>
                             </tbody>
                         </table>
