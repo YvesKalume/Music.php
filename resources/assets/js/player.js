@@ -73,8 +73,12 @@ export default {
         this.status.setStatus(true);
         this.getAudio(track.id);
     },
-    push: function(tracks) {
+    push: function(tracks, album) {
+        console.log(tracks);
         for (let i = 0; i < tracks.length; i++) {
+            if (album) {
+                tracks[i].album = album;
+            }
             this.queue.push(tracks[i]);
         }
         if (!this.status.getStatus()) {
