@@ -21,7 +21,7 @@
                         <text-input label="name" name="name" value="{{$album->name}}"></text-input>
                         <select-input label="Artist" name="artist" type="artists" value="{{$album->artist}}"></select-input>
 
-                        <submit-button btn-style="btn-success" form="updateform" label="Update" method="PUT" url="/albums/1"></submit-button>
+                        <submit-button btn-style="btn-success" form="updateform" label="Update" method="PUT" url="{{ route('albums.update', $album->id) }}"></submit-button>
                     </form>
                 </div>
             </div>
