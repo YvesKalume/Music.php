@@ -3,12 +3,18 @@
         <div class="panel panel-default" id="upload">
             <div class="panel-heading">Add Tracks</div>
             <div class="panel-body">
-                <input id="trackfiles" multiple type="file" v-on:change="parseFiles"></input>
+                <input class="ellipsis" id="trackfiles" multiple type="file" v-on:change="parseFiles"></input>
             </div>
         </div>
         <track-upload v-for="(upload, key) in uploads" :index="key" :key="key" :upload="upload"></track-upload>
     </div>
 </template>
+
+<style scoped>
+    .ellipsis {
+        width: 100%;
+    }
+</style>
 
 <script>
     export default {
