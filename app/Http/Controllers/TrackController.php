@@ -24,10 +24,9 @@ class TrackController extends Controller
      */
     public function index()
     {
-        //
         $tracks = Track::all();
         $tracks->load('artists');
-        // return view('track/index', ['tracks' => $tracks]);
+        $tracks->load('albums');
         return $tracks;
     }
 
@@ -71,11 +70,9 @@ class TrackController extends Controller
      */
     public function show(Track $track)
     {
-        return [
-            'id' => $track->id,
-            'title' => $track->title,
-            'artists' => $track->artists
-        ];
+        $track->load('albums');
+        $track->load('artists');
+        return $track;
     }
 
     /**
@@ -122,7 +119,7 @@ class TrackController extends Controller
         Storage::delete($track->path);
         $track->artists()->detach();
         $track->delete();
-        return ['status' => 'success'];
+        return ['status' => 'OK'];
     }
 
     // Additional functions.

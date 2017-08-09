@@ -12,28 +12,26 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Tracks</div>
                 <div class="panel-body">
-                    <table id="table" style="width: 100%; table-layout: fixed;">
+                    <table class="media-listing">
                         <thead>
-                            <tr>
-                                <th style="width: 5%;">ID</th>
-                                <th style="width: 50%;">Title</th>
-                                <th style="width: 40%;">Artists</th>
+                            <tr class="media-row">
+                                <th style="width: 5%; text-align: center;">ID</th>
+                                <th style="width: 40%;">Title</th>
+                                <th style="width: 30%;">Artists</th>
+                                <th style="width: 20%">Albums</th>
                                 <th style="width: 5%;">More</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="track in tracks" style="line-height: 2vw;">
-                                <td>{{ track.id }}</td>
+                            <tr class="media-row" v-for="track in tracks">
+                                <td class="id-entry">{{ track.id }}</td>
                                 <td class="ellipsis">{{ track.title }}</td>
                                 <td class="ellipsis" style="width: 100%;">{{ parseArtists(track.artists) }}</td>
+                                <td class="ellipsis">{{ track.albums[0].name }}
                                 <td>
                                     <div class="dropdown">
                                         <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#" v-on:click="player.play(track)">Play</a></li>
-                                            <li><a href="#">Queue</a></li>
-                                            <li v-if="checkAdmin()"><a :href="edit(track.id)" target="_blank">Edit</a></li>
-                                        </ul>
+                                        <track-dropdown :album="track.albums[0]" :track="track"></track-dropdown>
                                     </div>
                                 </td>
                             </tr>
@@ -79,6 +77,9 @@
                 },
                 success: data => {
                     this.tracks = data;
+                    this.$nextTick(() => {
+                        $('.media-listing').DataTable();
+                    });
                 }
             });
             console.log('Component mounted.');
