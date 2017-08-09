@@ -1,6 +1,9 @@
 <template>
     <div class="form-group">
-        <label :for="name" class="col-md-4 control-label">{{label}}</label>
+        <label :for="name" class="col-md-4 control-label">
+            <span class="glyphicon glyphicon-refresh" title="Press to reload values."
+                v-on:click="loadValues()"></span> {{label}}
+        </label>
 
         <div class="col-md-6">
             <select class="artists form-control" :id="name" :name="name" style="width: 100%" :multiple="multiple" required>
@@ -12,6 +15,12 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+    span {
+        cursor: pointer;
+    }
+</style>
 
 <script>
     export default {
@@ -45,11 +54,12 @@
                     },
                     success: (data) => {
                         if(data.status === "success") {
+                            this.loadValues();
                             alert("Item added successfully!");
-                            $(event.target).parent().prepend($('<option>', {
-                                value: data.id,
-                                text: artist
-                            }));
+                            // $(event.target).parent().prepend($('<option>', {
+                            //     value: data.id,
+                            //     text: artist
+                            // }));
                         }
                     }
                 });
@@ -58,6 +68,18 @@
                 console.log("Value " + id + " returns " + (this.values.indexOf(id) !== -1) + " for inValues");
                 return this.values.indexOf(id) !== -1;
             },
+            loadValues: function() {
+                $.ajax({
+                    url: document.location.origin + "/" + this.type,
+                    error: err => {
+                        console.log(err);
+                    },
+                    success: data => {
+                        console.log("Fetched data values. Now storing...");
+                        this.array = data;
+                    }
+                });
+            },
             toggle: function(e) {
                 if (!this.multiple) return;
                 e.preventDefault();
@@ -65,15 +87,7 @@
             }
         },
         mounted() {
-            $.ajax({
-                url: document.location.origin + "/" + this.type,
-                error: err => {
-                    console.log(err);
-                },
-                success: data => {
-                    this.array = data;
-                }
-            });
+            this.loadValues();
 
             if (this.value) {
                 let json = JSON.parse(this.value);
