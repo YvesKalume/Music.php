@@ -1,9 +1,39 @@
-
 // Fonts
 @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
 
 // Variables
 @import "variables";
+@import "bootswatch_variables";
+
+@import "bootstrap";
 
 // Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "bootswatch";
+
+// Custom class declarations
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.id-entry {
+    cursor: pointer;
+    text-align: center;
+}
+
+.media-listing {
+    @extend .img-rounded;
+
+    table-layout: fixed;
+    width: 100%;
+
+    tbody > tr:hover {
+        background-color: DarkGray;
+    }
+}
+
+.media-row {
+    line-height: 2vw;
+}

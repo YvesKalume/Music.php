@@ -1,22 +1,22 @@
 <template>
-    <div class="container" id="container" onload="$('#table').DataTable()">
+    <div class="container" id="container">
         <div class="row">
             <div class="col-md-12" id="column">
                 <div class="panel panel-default">
                     <div class="panel-heading">Queue</div>
                     <div class="panel-body">
-                        <table id="table" style="width: 100%;">
+                        <table class="media-listing">
                             <thead>
-                                <tr>
-                                    <th style="text-align: center;">#</th>
-                                    <th>Title</th>
-                                    <th>Artists</th>
-                                    <th>More</th>
+                                <tr class="media-row">
+                                    <th style="text-align: center; width: 5%;">#</th>
+                                    <th style="width: 50%;">Title</th>
+                                    <th style="width: 40%;">Artists</th>
+                                    <th style="width: 5%;">More</th>
                                     <th v-if="checkAdmin()">Edit</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr v-for="(track, key) in player.queue" style="line-height: 2vw;" v-on:dblclick="play(track)">
+                                    <tr class="media-row" v-for="(track, key) in player.queue" v-on:dblclick="play(track)">
                                         <td style="cursor: pointer; text-align: center;" v-on:click="play(track)">{{ key }}</td>
                                         <td>{{ track.title }}</td>
                                         <td>
@@ -26,7 +26,7 @@
                                             <div class="dropdown">
                                                 <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
                                                 <ul class="dropdown-menu">
-                                                    <li><a href="#" v-on:click="play(track)">Play</a></li>
+                                                    <li><a href="#" v-on:click="player.play(track)">Play</a></li>
                                                     <li><a href="#">Queue</a></li>
                                                 </ul>
                                             </div>
@@ -55,11 +55,6 @@
         data: () => {
             return {
                 player: player
-            }
-        },
-        methods: {
-            play: id => {
-                player.play(id);
             }
         },
         mounted() {

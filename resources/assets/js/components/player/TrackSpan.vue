@@ -1,7 +1,7 @@
 <template>
     <!-- Once upon a time, this was a span and not a div. Then the text overflowed because spans aren't block elements. -->
-    <div id="spancontent" v-on:mouseenter="startScroll" v-on:mouseleave="endScroll">
-        <p class="trackdata" style="font-weight: bold; overflow:hidden;">{{ player.status.getData().title }}</p>
+    <div id="spancontent" :title='player.status.getData().title + "\n" + player.status.getData().artists' v-on:mouseenter="startScroll" v-on:mouseleave="endScroll">
+        <p class="trackdata" style="font-weight: bold;">{{ player.status.getData().title }}</p>
         <p class="trackdata">{{ player.status.getData().artists }}</p>
     </div>
 </template>

@@ -11,9 +11,9 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
-    <link href="{{ asset('css/bootstrap-cyborg.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- <link href="{{ asset('css/bootstrap-cyborg.min.css') }}" rel="stylesheet"> -->
+    <!-- <link href="{{ asset('css/styles.css') }}" rel="stylesheet"> -->
 
     <!-- Scripts -->
     <script>

@@ -12,18 +12,18 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Albums</div>
                 <div class="panel-body">
-                    <table id="table" style="width: 100%">
+                    <table class="media-listing">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Artist</th>
-                                <th>More</th>
+                            <tr class="media-row">
+                                <th style="width: 5%; text-align: center;">ID</th>
+                                <th style="width: 50%;">Name</th>
+                                <th style="width: 40%;">Artist</th>
+                                <th style="width: 5%;">More</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="album in albums">
-                                <td>{{ album.id }}</td>
+                            <tr class="media-row" v-for="album in albums">
+                                <td class="id-entry">{{ album.id }}</td>
                                 <td>{{ album.name }}</td>
                                 <td>{{ album.artist.name }}</td>
                                 <td>

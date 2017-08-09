@@ -30,6 +30,7 @@ Vue.component('bar-player', require('./components/BarPlayer.vue'));
 Vue.component('column', require('./components/Column.vue'));
 Vue.component('home', require('./components/Home.vue'));
 Vue.component('queue', require('./components/Queue.vue'));
+Vue.component('track-dropdown', require('./components/track/Dropdown.vue'));
 Vue.component('track-index', require('./components/track/Index.vue'));
 Vue.component('track-info', require('./components/player/TrackInfo.vue'));
 Vue.component('track-span', require('./components/player/TrackSpan.vue'));
@@ -95,6 +96,7 @@ Vue.mixin({
                 },
                 method: 'POST',
                 success: (data) => {
+                    console.log("No error thrown by server.");
                     if(data.status === "OK") {
                         alert("Item deleted successfully!");
                     }

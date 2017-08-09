@@ -19,9 +19,9 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Tracks</div>
                     <div class="panel-body">
-                        <table id="table" style="width: 100%; table-layout: fixed;">
+                        <table class="img-rounded media-listing">
                             <thead>
-                                <tr>
+                                <tr class="media-row">
                                     <th style="text-align: center; width: 5%;">#</th>
                                     <th style="width: 50%;">Title</th>
                                     <th style="width: 40%;">Artists</th>
@@ -29,8 +29,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                    <tr v-for="track in album.tracks" style="line-height: 2vw; width: 100%;" v-on:dblclick="play(track)">
-                                        <td style="cursor: pointer; text-align: center; max-width: 10%;" v-on:click="play(track)">
+                                    <tr class="media-row" v-for="track in album.tracks" style="width: 100%;" v-on:dblclick="play(track)">
+                                        <td style="cursor: pointer; text-align: center;" v-on:click="play(track)">
                                             <span></span>
                                             <span>{{ track.id }}</span>
                                         </td>
@@ -43,11 +43,7 @@
                                         <td>
                                             <div class="dropdown">
                                                 <span class="glyphicon glyphicon-option-horizontal dropdown-toggle" data-toggle="dropdown" style="cursor: pointer;"></span>
-                                                <ul class="dropdown-menu">
-                                                    <li><a href="#" v-on:click="play(track)">Play</a></li>
-                                                    <li><a :href="'/tracks/' + track.id + '/edit'" target="_blank">Edit</a></li>
-                                                    <li><a href="#" v-on:click="push([track])">Queue</a></li>
-                                                </ul>
+                                                <track-dropdown :album="album" :track="track"></track-dropdown>
                                             </div>
                                         </td>
                                     </tr>
@@ -59,12 +55,6 @@
         </div>
     </div>
 </template>
-
-<style scoped>
-    tbody > tr:hover {
-        background-color: DarkGray;
-    }
-</style>
 
 <script>
     import player from '../../player.js';
@@ -102,7 +92,7 @@
                 success: data => {
                     this.album = data;
                     this.$nextTick(() => {
-                        // $('#table').DataTable();
+                        $('.media-listing').DataTable();
                     });
                 }
             });
