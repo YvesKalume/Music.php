@@ -63,7 +63,18 @@ export default {
         if (time / 60 < 1) return timeString;
         return this.parseTime(time / 60, true) + ":" + timeString;
     },
-    play: function(track) {
+    /**
+     * Plays a specified track immediately.
+     *
+     * This will splice the existing track at index 0 in the queue,
+     * but leave all other tracks intact in the queue.
+     * @param {track} track - The track to load into the player.
+     * @param {album} [album] - The album to specify as part of the track.
+     */
+    play: function(track, album) {
+        if (album) {
+            track.album = album;
+        }
         if (this.audio) {
             this.audio.pause();
             // delete(this.audio);
@@ -73,6 +84,14 @@ export default {
         this.status.setStatus(true);
         this.getAudio(track.id);
     },
+    /**
+     * Pushes an array of tracks to the music queue.
+     *
+     * If the queue was empty before the push and was not playing tracks,
+     * the player will begin to process tracks automatically.
+     * @param {track[]} tracks - An array of tracks to push to the queue.
+     * @param {album} [album] - The album to specify as part of the track.
+     */
     push: function(tracks, album) {
         console.log(tracks);
         for (let i = 0; i < tracks.length; i++) {
