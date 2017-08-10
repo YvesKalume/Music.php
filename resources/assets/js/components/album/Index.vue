@@ -1,5 +1,7 @@
 <template>
-    <div class="container">
+    <!-- container-fluid is used in place of container so that the size of the
+    container doesn't expand beyond the page. -->
+    <div class="container-fluid">
         <div class="row">
             <div class="panel panel-default">
                 <div class="panel-heading">Actions</div>

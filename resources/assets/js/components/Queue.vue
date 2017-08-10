@@ -1,5 +1,7 @@
 <template>
-    <div class="container" id="container">
+    <!-- container-fluid is used in place of container so that the size of the
+    container doesn't expand beyond the page. -->
+    <div class="container-fluid" id="container">
         <div class="row">
             <div class="col-md-12" id="column">
                 <div class="panel panel-default">
