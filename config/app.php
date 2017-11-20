@@ -229,4 +229,6 @@ return [
 
     ],
 
+    'ffmpeg' => env('FFMPEG_PATH', null),
+
 ];

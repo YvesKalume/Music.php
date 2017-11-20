@@ -18,6 +18,26 @@
                 </div>
             </div>
             <div class="panel panel-default">
+                <div class="panel-heading">Application Settings</div>
+                <div class="panel-body">
+                    @if (Session::get('status') == '200-settings')
+                        <div class="alert alert-success">
+                            Settings updated successfully!
+                        </div>
+                    @endisset
+                    <p>These are the settings used for what every user sees on the website.</p>
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('settings.update') }}"
+                        enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        {{ method_field('PUT') }}
+                        <text-input label="Format" name="format" required value="{{ $errors->has('format') ? old('format') : $format }}"></text-input>
+                        </text-input>
+                        <text-input label="Bitrate" name="bitrate" required value="{{ $errors->has('bitrate') ? old('bitrate') : $bitrate }}"></text-input>
+                        <submit-button btn-style="btn-primary" label="Update"></submit-button>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default">
                 <div class="panel-heading">API Authentication</div>
                 <div class="panel-body">
                     <passport-clients></passport-clients>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Album;
 use App\Artist;
+use App\Setting;
 use App\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -132,7 +133,28 @@ class TrackController extends Controller
      */
     public function audio(Track $track)
     {
-        return response()->file(storage_path().DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.$track->path);
+        $ffmpeg = config('app.ffmpeg');
+        abort_unless(is_executable($ffmpeg), 500, 'Please make sure that ffmpeg is configured correctly.');
+
+        $format = Setting::firstOrCreate(['id' => 'format'], ['value' => 'ogg'])->value;
+        $bitrate = Setting::firstOrCreate(['id' => 'bitrate'], ['value' => 128])->value;
+
+
+        $args = [
+            '-i '.escapeshellarg(storage_path().DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.$track->path),
+            '-map 0:0',
+            '-v 0',
+            "-ab {$bitrate}k",
+            "-f {$format}",
+            '-'
+        ];
+
+        header('Content-Type: audio/'.$format);
+        header('Content-Disposition: attachment; filename="'.basename($track->path).'"');
+
+        passthru("$ffmpeg ".implode($args, ' '));
+
+        // return response()->file(storage_path().DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.$track->path);
     }
 
     public function queue()
