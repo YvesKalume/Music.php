@@ -14,7 +14,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Albums</div>
                 <div class="panel-body">
-                    <table class="media-listing">
+                    <table class="media-listing table">
                         <thead>
                             <tr class="media-row">
                                 <th style="width: 5%; text-align: center;">ID</th>

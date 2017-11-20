@@ -21,7 +21,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Tracks</div>
                     <div class="panel-body">
-                        <table class="img-rounded media-listing">
+                        <table class="img-rounded media-listing table">
                             <thead>
                                 <tr class="media-row">
                                     <th style="text-align: center; width: 5%;">#</th>
@@ -85,7 +85,7 @@
         },
         mounted() {
             $.get({
-                url: document.location.origin + "/albums/" + this.$store.state.album,
+                url: document.location.origin + "/albums/" + this.$route.params.id,
                 error: err => {
                     let newWindow = window.open("", "_blank");
                     newWindow.document.write(err.responseText);
@@ -106,7 +106,7 @@
                 $(event.target).find("span:first-child").removeClass("glyphicon glyphicon-play");
                 $(event.target).find("span:nth-child(2)").show();
             });
-            console.log('Component mounted.')
+            console.log('Component mounted for album ' + this.$route.params.id + '.')
         }
     }
 </script>

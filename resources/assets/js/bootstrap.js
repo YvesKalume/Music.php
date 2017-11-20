@@ -18,6 +18,9 @@ require('bootstrap-sass');
  */
 
 window.Vue = require('vue');
+// window.VueRouter = require('vue-router');
+import VueRouter from 'vue-router';
+window.VueRouter = VueRouter;
 window.Vuex = require('vuex');
 
 /**
@@ -47,3 +50,6 @@ window.axios.defaults.headers.common = {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+
+require('datatables.net-bs');
+window.jsmediatags = require('jsmediatags/dist/jsmediatags');

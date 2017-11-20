@@ -19,17 +19,14 @@ $.ajaxSetup({
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.use(VueRouter);
 Vue.use(Vuex);
 
 Vue.component('album-display', require('./components/album/Display.vue'));
 Vue.component('album-dropdown', require('./components/album/Dropdown.vue'));
-Vue.component('album-index', require('./components/album/Index.vue'));
-Vue.component('album-show', require('./components/album/Show.vue'));
 Vue.component('file-handler', require('./components/FileHandler.vue'));
 Vue.component('bar-player', require('./components/BarPlayer.vue'));
 Vue.component('column', require('./components/Column.vue'));
-Vue.component('home', require('./components/Home.vue'));
-Vue.component('queue', require('./components/Queue.vue'));
 Vue.component('track-dropdown', require('./components/track/Dropdown.vue'));
 Vue.component('track-index', require('./components/track/Index.vue'));
 Vue.component('track-info', require('./components/player/TrackInfo.vue'));
@@ -57,21 +54,40 @@ Vue.component('password-input', require('./components/form/PasswordInput.vue'));
 Vue.component('select-input', require('./components/form/SelectInput.vue'));
 Vue.component('submit-button', require('./components/form/SubmitButton.vue'));
 
+const routes = [
+    {
+        path: '/',
+        component: require('./components/Home.vue')
+    },
+    {
+        path: '/albums',
+        component: require('./components/album/Index.vue')
+    },
+    {
+        name: 'albums.show',
+        path: '/albums/:id',
+        component: require('./components/album/Show.vue')
+    },
+    {
+        path: '/queue',
+        component: require('./components/Queue.vue')
+    },
+    {
+        path: '/tracks',
+        component: require('./components/track/Index.vue')
+    },
+];
+
+const router = new VueRouter({
+    routes
+});
+
 /**
  * Load the store first so the app has data to fetch.
  */
 const store = new Vuex.Store({
     state: {
-        admin: false,
-        album: null,
-        view: "home"
-    },
-    getters: {
-        currentAlbum: state => state.album
-    },
-    mutations: {
-        setAlbum: (state, data) => state.album = data,
-        setView: (state, data) => state.view = data
+        admin: false
     }
 });
 
@@ -122,6 +138,7 @@ Vue.mixin({
 
 const app = new Vue({
     el: '#app',
+    router,
     store,
     data: {
         admin: store.state.admin,

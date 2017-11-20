@@ -19,6 +19,9 @@
     "vue": "^2.1.10"
   },
   "dependencies": {
+    "datatables.net-bs": "^1.10.16",
+    "jsmediatags": "^3.8.1",
+    "vue-router": "^3.0.1",
     "vuex": "^2.3.1"
   }
 }

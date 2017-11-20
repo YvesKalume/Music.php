@@ -2,7 +2,10 @@
     <div class="img-rounded">
         <img :src="'/albums/' + album.id + '/image'"></img><br>
         <div class="title-div">
-            <a href="#" class="ellipsis" v-on:click="setView('album-show', ['setAlbum', album.id])"><b>{{ album.name }}</b></a>
+            <!-- <a href="#" class="ellipsis" v-on:click="setView('album-show', ['setAlbum', album.id])"><b>{{ album.name }}</b></a> -->
+            <router-link :to="{ name: 'albums.show', params: { id: album.id }}">
+                <b>{{ album.name }}</b>
+            </router-link>
         </div>
         <a href="#">{{ album.artist.name }}</a>
         <div class="dropdown">
